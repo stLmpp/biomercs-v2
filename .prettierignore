@@ -1,0 +1,6 @@
+yarn.lock
+.prettierignore
+package.json.yarn
+.gitignore
+*.png
+yarn-error.log
