@@ -1,2 +1,16 @@
 /* You can add global styles to this file, and also import other style files */
 @import 'theme';
+
+body {
+  background-color: $dark;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: $light;
+}
+::-webkit-scrollbar-thumb {
+  background: $dark-weak;
+}

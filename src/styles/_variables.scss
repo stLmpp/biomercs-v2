@@ -1,0 +1,35 @@
+// Sizes
+$radius: 4px;
+
+// Colors
+$white: white;
+$light: #e7e7e7;
+$light-grey: #d0d0d0;
+$dark-weak: #757575;
+$dark-spinner: #6e6e6e;
+$dark-overlay: #4c4c4c;
+$dark: #303030;
+
+$primary-type: 'primary';
+$primary-pallete: (
+  0: #393b44,
+  50: #4f5460,
+  100: #626b77,
+  200: #788394,
+  300: #959bb5,
+  400: #d6e0f0,
+  500: #f1f3f8,
+  600: #f7f7ff,
+);
+
+$accent-type: 'accent';
+$accent-pallete: (
+  0: #00587a,
+  50: #005f85,
+  100: #00709d,
+  200: #0078a9,
+  300: #0084be,
+  400: #008dcf,
+  500: #009ee9,
+  600: #00acff,
+);

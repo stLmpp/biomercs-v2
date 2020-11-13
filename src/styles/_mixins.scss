@@ -1,0 +1,16 @@
+@import 'variables';
+
+@mixin actions() {
+  margin-top: 1rem;
+  display: flex;
+  align-items: center;
+  button:not(:last-of-type) {
+    margin-right: 1rem;
+  }
+  &.end {
+    justify-content: flex-end;
+  }
+  &.start {
+    justify-content: flex-start;
+  }
+}

@@ -88,9 +88,7 @@
     "whitespace": {
       "options": ["check-branch", "check-decl", "check-operator", "check-separator", "check-type", "check-typecast"]
     },
-    "component-class-suffix": true,
     "contextual-lifecycle": true,
-    "directive-class-suffix": true,
     "no-conflicting-lifecycle": true,
     "no-host-metadata-property": false,
     "no-input-rename": true,
@@ -103,10 +101,7 @@
     "template-no-negated-async": true,
     "use-lifecycle-interface": true,
     "use-pipe-transform-interface": true,
-    "directive-selector": [true, "attribute", "", "camelCase"],
-    "component-selector": [true, "element", "bio", "kebab-case"],
     "template-no-any": true,
-    "use-injectable-provided-in": true,
     "component-max-inline-declarations": [true, { "animations": 20, "styles": 8, "template": 5 }],
     "template-no-call-expression": true,
     "template-use-track-by-function": true,
