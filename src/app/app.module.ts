@@ -13,6 +13,11 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { StRouterModule } from '@stlmpp/router';
 import { environment } from '../environments/environment';
 import { StControlModule } from '@stlmpp/control';
+import { SpinnerModule } from './components/spinner/spinner.module';
+import { ButtonModule } from './components/button/button.module';
+import { ModalModule } from './components/modal/modal.module';
+import { IconModule } from './components/icon/icon.module';
+import { CardModule } from './components/card/card.module';
 
 @NgModule({
   declarations: [AppComponent],
@@ -28,6 +33,11 @@ import { StControlModule } from '@stlmpp/control';
     StRouterModule.forRoot(),
     StControlModule.forRoot(),
     AuthModule.forRoot(),
+    ModalModule.forRoot(),
+    SpinnerModule,
+    ButtonModule,
+    IconModule,
+    CardModule,
   ],
   providers: [],
   bootstrap: [AppComponent],
