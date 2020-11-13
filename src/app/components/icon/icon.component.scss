@@ -1,0 +1,30 @@
+@import 'variables';
+@import 'functions';
+
+@mixin icon($type) {
+  &.#{$type} {
+    $color: get-color($type);
+    color: $color;
+    &.disabled {
+      color: get-disabled-color($color);
+    }
+  }
+}
+
+:host {
+  line-height: 24px;
+  @include icon($primary-type);
+  @include icon($accent-type);
+  &.small {
+    font-size: 18px;
+    line-height: 18px;
+  }
+  &.medium {
+    font-size: 24px;
+    line-height: 24px;
+  }
+  &.large {
+    font-size: 36px;
+    line-height: 36px;
+  }
+}
