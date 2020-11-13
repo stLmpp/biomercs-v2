@@ -8,6 +8,7 @@
   position: relative;
   display: block;
   color: $dark;
+  @include elevation(2);
   .card-title {
     margin-bottom: 1rem;
     font-weight: 500;

@@ -18,6 +18,7 @@ import { ButtonModule } from './components/button/button.module';
 import { ModalModule } from './components/modal/modal.module';
 import { IconModule } from './components/icon/icon.module';
 import { CardModule } from './components/card/card.module';
+import { CollapseModule } from './components/collapse/collapse.module';
 
 @NgModule({
   declarations: [AppComponent],
@@ -38,6 +39,7 @@ import { CardModule } from './components/card/card.module';
     ButtonModule,
     IconModule,
     CardModule,
+    CollapseModule,
   ],
   providers: [],
   bootstrap: [AppComponent],
