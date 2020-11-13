@@ -1,0 +1,21 @@
+@import 'variables';
+@import 'mixins';
+
+.card {
+  border-radius: $radius;
+  background-color: $light;
+  padding: 1rem;
+  position: relative;
+  display: block;
+  color: $dark;
+  .card-title {
+    margin-bottom: 1rem;
+    font-weight: 500;
+  }
+  .card-content {
+    display: block;
+  }
+  .card-actions {
+    @include actions();
+  }
+}
