@@ -4,7 +4,7 @@ import { AbstractComponent } from '../core/abstract-component';
 import { fadeInOutAnimation } from '../../shared/animations/fade-in-out';
 
 @Component({
-  selector: 'button[bioButton],a[button]',
+  selector: 'button[bioButton],a[bioButton]',
   templateUrl: './button.component.html',
   styleUrls: ['./button.component.scss'],
   encapsulation: ViewEncapsulation.None,

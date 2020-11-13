@@ -2,12 +2,6 @@
   <h5 cardTitle>Title</h5>
   <card-content>Content</card-content>
   <card-actions>
-    <button bioButton disabled [loading]="loading$ | async">Teste</button>
-
-    <button bioButton accent small (click)="loading$.next(!loading$.value)">Toggle</button>
-
-    <button bioButton large [loading]="loading$ | async">Large</button>
-
-    <button bioButton icon (click)="open()"><icon>person</icon></button>
+    <a bioButton>Teste</a>
   </card-actions>
 </card>
