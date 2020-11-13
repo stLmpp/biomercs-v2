@@ -12,6 +12,10 @@ export class LoadingService {
     debounceTime(250)
   );
 
+  get loading(): boolean {
+    return !!this._loading$.value;
+  }
+
   add(): void {
     this._loading$.next(this._loading$.value + 1);
   }

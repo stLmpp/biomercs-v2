@@ -9,7 +9,6 @@ import { ErrorComponent } from './error/error.component';
 import { HandleErrorDevInterceptor } from './error/handle-error-dev.interceptor';
 import { SharedModule } from '../shared/shared.module';
 import { AuthErrorInterceptor } from '../auth/auth-error.interceptor';
-import { SpinnerModule } from '../components/spinner/spinner.module';
 import { ModalModule } from '../components/modal/modal.module';
 import { ButtonModule } from '../components/button/button.module';
 
@@ -23,7 +22,7 @@ const withInterceptors = (...interceptors: any[]): Provider[] =>
 @NgModule({
   declarations: [ErrorComponent],
   exports: [ErrorComponent],
-  imports: [SharedModule, ModalModule.forChild(), SpinnerModule, ButtonModule],
+  imports: [SharedModule, ModalModule.forChild(), ButtonModule],
 })
 export class CoreModule {
   static forRoot(): ModuleWithProviders<CoreModule> {

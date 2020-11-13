@@ -80,6 +80,7 @@
   }
   @include button($primary-type);
   @include button($accent-type);
+  @include button($danger-type);
   &.icon,
   &.fab {
     padding: 0.25rem;

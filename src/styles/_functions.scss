@@ -5,6 +5,8 @@
     @return map-get($primary-pallete, $level);
   } @else if $type == $accent-type {
     @return map-get($accent-pallete, $level);
+  } @else if $type == $danger-type {
+    @return map-get($danger-pallete, $level);
   }
 }
 
