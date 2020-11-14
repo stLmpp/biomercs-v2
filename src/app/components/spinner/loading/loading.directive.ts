@@ -20,9 +20,6 @@ import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
   host: { '[style.position]': `'relative'` },
 })
 export class LoadingDirective implements OnInit, AfterViewInit, OnDestroy {
-  static ngAcceptInputType_bioLoading: BooleanInput;
-  static ngAcceptInputType_noBox: BooleanInput;
-
   constructor(
     private viewContainerRef: ViewContainerRef,
     private componentFactoryResolver: ComponentFactoryResolver,
@@ -92,4 +89,7 @@ export class LoadingDirective implements OnInit, AfterViewInit, OnDestroy {
   ngOnDestroy(): void {
     this.componentRef?.destroy();
   }
+
+  static ngAcceptInputType_bioLoading: BooleanInput;
+  static ngAcceptInputType_noBox: BooleanInput;
 }

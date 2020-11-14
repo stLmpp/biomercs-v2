@@ -12,13 +12,9 @@ class NgLetContext<T> {
 
 @Directive({ selector: '[ngLet]' })
 export class NgLetDirective<T> implements OnDestroy, OnInit {
-  private _context = new NgLetContext<T>();
-
   constructor(private viewContainer: ViewContainerRef, private templateRef: TemplateRef<NgLetContext<T>>) {}
 
-  static ngTemplateContextGuard<T>(dir: NgLetDirective<T>, ctx: any): ctx is NgLetContext<NonNullable<T>> {
-    return true;
-  }
+  private _context = new NgLetContext<T>();
 
   @Input()
   set ngLet(value: T | null) {
@@ -32,5 +28,9 @@ export class NgLetDirective<T> implements OnDestroy, OnInit {
 
   ngOnDestroy(): void {
     this.viewContainer.clear();
+  }
+
+  static ngTemplateContextGuard<ST>(dir: NgLetDirective<ST>, ctx: any): ctx is NgLetContext<NonNullable<ST>> {
+    return true;
   }
 }

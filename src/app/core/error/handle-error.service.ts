@@ -1,13 +1,21 @@
 import { Injectable } from '@angular/core';
 import { HttpError } from '../../model/http-error';
-import { take } from 'rxjs/operators';
-import { ErrorComponent } from './error.component';
 import { OperatorFunction } from 'rxjs';
 import { catchAndThrow } from '../../util/operators/catchError';
 
 @Injectable({ providedIn: 'root' })
 export class HandleErrorService {
-  constructor() {}
+  private _snackBar(message: string, button: string, err: HttpError, isAdmin: boolean): void {
+    // const snack = this.matSnackBar.open(message, button);
+    // if (isAdmin) {
+    //   snack
+    //     .onAction()
+    //     .pipe(take(1))
+    //     .subscribe(() => {
+    //       this.matDialog.open(ErrorComponent, { data: err });
+    //     });
+    // }
+  }
 
   handleErrorOperator<T>(): OperatorFunction<T, T> {
     return catchAndThrow(err => {
@@ -28,19 +36,7 @@ export class HandleErrorService {
           message = 'Internal error';
           break;
       }
-      this.snackBar(message, button, err, isAdmin);
+      this._snackBar(message, button, err, isAdmin);
     });
-  }
-
-  private snackBar(message: string, button: string, err: HttpError, isAdmin: boolean): void {
-    // const snack = this.matSnackBar.open(message, button);
-    // if (isAdmin) {
-    //   snack
-    //     .onAction()
-    //     .pipe(take(1))
-    //     .subscribe(() => {
-    //       this.matDialog.open(ErrorComponent, { data: err });
-    //     });
-    // }
   }
 }

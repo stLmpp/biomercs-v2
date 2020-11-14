@@ -4,9 +4,17 @@ import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
 
 @Directive()
 export abstract class AbstractComponent {
-  static ngAcceptInputType_disabled: BooleanInput;
+  @Input()
+  get disabled(): boolean {
+    return this._disabled;
+  }
+  set disabled(disabled: boolean) {
+    this._disabled = coerceBooleanProperty(disabled);
+  }
+  private _disabled = false;
 
   @Input() bioType: BioTypeInput;
+  @Input() bioSize: BioSizeInput;
 
   @HostBinding('class.primary') get primaryClass(): boolean {
     return (this.bioType || 'primary') === 'primary';
@@ -38,15 +46,6 @@ export abstract class AbstractComponent {
     }
   }
 
-  @Input()
-  get disabled(): boolean {
-    return this._disabled;
-  }
-  set disabled(disabled: boolean) {
-    this._disabled = coerceBooleanProperty(disabled);
-  }
-  private _disabled = false;
-
   @HostBinding('class.disabled')
   @HostBinding('attr.disabled')
   get disabledClass(): boolean | null {
@@ -56,8 +55,6 @@ export abstract class AbstractComponent {
   @HostBinding('attr.aria-disabled') get ariaDisabled(): string {
     return '' + this._disabled;
   }
-
-  @Input() bioSize: BioSizeInput;
 
   @HostBinding('class.small') get smallClass(): boolean {
     return this.bioSize === 'small';
@@ -88,4 +85,6 @@ export abstract class AbstractComponent {
       this.bioSize = 'large';
     }
   }
+
+  static ngAcceptInputType_disabled: BooleanInput;
 }

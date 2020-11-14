@@ -6,9 +6,6 @@ import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
   host: { class: 'modal-actions' },
 })
 export class ModalActionsDirective {
-  static ngAcceptInputType_start: BooleanInput;
-  static ngAcceptInputType_end: BooleanInput;
-
   @Input()
   @HostBinding('class.start')
   get start(): boolean {
@@ -34,4 +31,7 @@ export class ModalActionsDirective {
     }
   }
   private _end = false;
+
+  static ngAcceptInputType_start: BooleanInput;
+  static ngAcceptInputType_end: BooleanInput;
 }

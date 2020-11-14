@@ -4,13 +4,11 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { isArray, isObject } from '@stlmpp/utils';
 
-// tslint:disable-next-line:max-line-length
+// eslint-disable-next-line max-len
 export const isoDateReg = /(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d\.\d+([+-][0-2]\d:[0-5]\d|Z))|(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d([+-][0-2]\d:[0-5]\d|Z))|(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d([+-][0-2]\d:[0-5]\d|Z))/;
 
 @Injectable({ providedIn: 'root' })
 export class DateInterceptor implements HttpInterceptor {
-  constructor() {}
-
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     return next.handle(request).pipe(
       map(resp => {
@@ -31,7 +29,7 @@ export class DateInterceptor implements HttpInterceptor {
     return value;
   }
 
-  handleObject(value: object): any {
+  handleObject(value: Record<any, any>): any {
     return Object.keys(value).reduce((newObject, key) => {
       let property = (value as any)[key];
       if (isArray(property)) {

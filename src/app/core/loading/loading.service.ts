@@ -4,10 +4,8 @@ import { debounceTime, map } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
 export class LoadingService {
-  constructor() {}
-
   private _loading$ = new BehaviorSubject<number>(0);
-  public isLoading$ = this._loading$.asObservable().pipe(
+  isLoading$ = this._loading$.asObservable().pipe(
     map(loadings => !!loadings),
     debounceTime(250)
   );

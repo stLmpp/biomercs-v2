@@ -8,14 +8,6 @@ import { BooleanInput, coerceBooleanProperty, coerceNumberProperty, NumberInput 
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SpinnerComponent implements OnInit, OnChanges {
-  static ngAcceptInputType_small: BooleanInput;
-  static ngAcceptInputType_medium: BooleanInput;
-  static ngAcceptInputType_large: BooleanInput;
-  static ngAcceptInputType_size: NumberInput;
-
-  constructor() {}
-
-  @Input() baseSize = 200;
   @Input()
   set size(size: number) {
     size = coerceNumberProperty(size);
@@ -29,6 +21,7 @@ export class SpinnerComponent implements OnInit, OnChanges {
   }
   private _size = 1;
 
+  @Input() baseSize = 200;
   @Input() small: BooleanInput;
   @Input() medium: BooleanInput;
   @Input() large: BooleanInput;
@@ -46,4 +39,9 @@ export class SpinnerComponent implements OnInit, OnChanges {
       this.size = 0.6;
     }
   }
+
+  static ngAcceptInputType_small: BooleanInput;
+  static ngAcceptInputType_medium: BooleanInput;
+  static ngAcceptInputType_large: BooleanInput;
+  static ngAcceptInputType_size: NumberInput;
 }

@@ -12,7 +12,6 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import { CdkPortalOutlet, ComponentPortal, TemplatePortal } from '@angular/cdk/portal';
-import { Subject } from 'rxjs';
 import { OverlayRef } from '@angular/cdk/overlay';
 import { MODAL_LAST_FOCUSED_ELEMENT, ModalConfig } from './modal.config';
 import { ConfigurableFocusTrap, ConfigurableFocusTrapFactory } from '@angular/cdk/a11y';
@@ -34,14 +33,19 @@ export class ModalComponent<R = any> implements OnInit, OnDestroy {
     private elementRef: ElementRef
   ) {}
 
-  _destroy$ = new Subject();
-
   private _focusTrap?: ConfigurableFocusTrap;
 
   @ViewChild(CdkPortalOutlet, { static: true }) portalOutlet!: CdkPortalOutlet;
 
   @HostBinding('attr.id') get id(): string {
     return this.modalConfig.id;
+  }
+
+  private async _initializeTrapFocus(): Promise<void> {
+    this._focusTrap = this.configurableFocusTrapFactory.create(this.elementRef.nativeElement);
+    if (this.modalConfig.autoFocus) {
+      await this._focusTrap.focusInitialElementWhenReady();
+    }
   }
 
   attachTemplate<T>(templatePortal: TemplatePortal<T>): EmbeddedViewRef<T> {
@@ -52,20 +56,11 @@ export class ModalComponent<R = any> implements OnInit, OnDestroy {
     return this.portalOutlet.attachComponentPortal(componentPortal);
   }
 
-  private async initializeTrapFocus(): Promise<void> {
-    this._focusTrap = this.configurableFocusTrapFactory.create(this.elementRef.nativeElement);
-    if (this.modalConfig.autoFocus) {
-      await this._focusTrap.focusInitialElementWhenReady();
-    }
-  }
-
   async ngOnInit(): Promise<void> {
-    await this.initializeTrapFocus();
+    await this._initializeTrapFocus();
   }
 
   ngOnDestroy(): void {
-    this._destroy$.next();
-    this._destroy$.complete();
     if (this.modalConfig.restoreFocus) {
       (this.lastFocusedElement as HTMLElement)?.focus?.();
     }

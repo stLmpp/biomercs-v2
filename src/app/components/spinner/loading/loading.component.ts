@@ -8,9 +8,7 @@ import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LoadingComponent implements OnInit {
-  static ngAcceptInputType_noBox: BooleanInput;
-
-  constructor() {}
+  private _noBox = false;
 
   @Input()
   get noBox(): boolean {
@@ -19,9 +17,10 @@ export class LoadingComponent implements OnInit {
   set noBox(noBox: boolean) {
     this._noBox = coerceBooleanProperty(noBox);
   }
-  private _noBox = false;
 
   @Input() show = false;
 
   ngOnInit(): void {}
+
+  static ngAcceptInputType_noBox: BooleanInput;
 }

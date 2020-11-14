@@ -27,42 +27,11 @@ export class ModalService implements OnDestroy {
 
   private _modalMap = new Map<string, ModalRef>();
 
-  open<T = any, D = any, R = any>(
-    component: Type<T> | TemplateRef<T>,
-    _config?: Partial<ModalConfig>
-  ): ModalRef<T, D, R> {
-    const config = this.mergeConfig(_config);
-    const overlayRef = this.createOverlayRef(config);
-    const lastFocusedElement = this.document.activeElement;
-    const modalRef = new ModalRef(config.id, overlayRef, config);
-    const containerPortal = this.createContainerPortal(config, overlayRef, lastFocusedElement, modalRef);
-    const containerRef = overlayRef.attach(containerPortal);
-    if (component instanceof TemplateRef) {
-      const templatePortal = this.createTemplatePortal(
-        component,
-        modalRef,
-        config,
-        config.viewContainerRef ?? containerRef.injector.get(ViewContainerRef)
-      );
-      containerRef.instance.attachTemplate(templatePortal);
-    } else {
-      const componentPortal = this.createComponentPortal(component, config, containerRef.injector);
-      const componentRef = containerRef.instance.attachComponent(componentPortal);
-      modalRef.componentInstance = componentRef.instance;
-    }
-    modalRef.data = config.data;
-    this._modalMap.set(config.id, modalRef);
-    modalRef.onClose$.subscribe(() => {
-      this._modalMap.delete(config.id);
-    });
-    return modalRef;
-  }
-
-  private mergeConfig<D = any>(config?: Partial<ModalConfig>): ModalConfig<D> {
+  private _mergeConfig<D = any>(config?: Partial<ModalConfig>): ModalConfig<D> {
     return new ModalConfig<D>({ ...this.modalDefaultConfig, ...config });
   }
 
-  private createOverlayConfig<D = any>(config: ModalConfig<D>): OverlayConfig {
+  private _createOverlayConfig<D = any>(config: ModalConfig<D>): OverlayConfig {
     return new OverlayConfig({
       ...config,
       positionStrategy: this.overlay.position().global().centerHorizontally().centerVertically(),
@@ -72,11 +41,11 @@ export class ModalService implements OnDestroy {
     });
   }
 
-  private createOverlayRef<D = any>(config: ModalConfig<D>): OverlayRef {
-    return this.overlay.create(this.createOverlayConfig(config));
+  private _createOverlayRef<D = any>(config: ModalConfig<D>): OverlayRef {
+    return this.overlay.create(this._createOverlayConfig(config));
   }
 
-  private createContainerPortal<D = any>(
+  private _createContainerPortal<D = any>(
     config: ModalConfig<D>,
     overlayRef: OverlayRef,
     lastFocusedElement: Element | null,
@@ -95,7 +64,7 @@ export class ModalService implements OnDestroy {
     return new ComponentPortal(ModalComponent, config.viewContainerRef, injector, config.componentFactoryResolver);
   }
 
-  private createComponentPortal<T = any, D = any>(
+  private _createComponentPortal<T = any, D = any>(
     component: Type<T>,
     config: ModalConfig<D>,
     injector: Injector
@@ -103,13 +72,44 @@ export class ModalService implements OnDestroy {
     return new ComponentPortal<T>(component, config.viewContainerRef, injector, config.componentFactoryResolver);
   }
 
-  private createTemplatePortal<T = any, D = any>(
+  private _createTemplatePortal<T = any, D = any>(
     template: TemplateRef<T>,
     modalRef: ModalRef,
     config: ModalConfig<D>,
     viewContainerRef: ViewContainerRef
   ): TemplatePortal<T> {
     return new TemplatePortal<T>(template, viewContainerRef, { $implicit: config.data, modalRef } as any);
+  }
+
+  open<T = any, D = any, R = any>(
+    component: Type<T> | TemplateRef<T>,
+    _config?: Partial<ModalConfig>
+  ): ModalRef<T, D, R> {
+    const config = this._mergeConfig(_config);
+    const overlayRef = this._createOverlayRef(config);
+    const lastFocusedElement = this.document.activeElement;
+    const modalRef = new ModalRef(config.id, overlayRef, config);
+    const containerPortal = this._createContainerPortal(config, overlayRef, lastFocusedElement, modalRef);
+    const containerRef = overlayRef.attach(containerPortal);
+    if (component instanceof TemplateRef) {
+      const templatePortal = this._createTemplatePortal(
+        component,
+        modalRef,
+        config,
+        config.viewContainerRef ?? containerRef.injector.get(ViewContainerRef)
+      );
+      containerRef.instance.attachTemplate(templatePortal);
+    } else {
+      const componentPortal = this._createComponentPortal(component, config, containerRef.injector);
+      const componentRef = containerRef.instance.attachComponent(componentPortal);
+      modalRef.componentInstance = componentRef.instance;
+    }
+    modalRef.data = config.data;
+    this._modalMap.set(config.id, modalRef);
+    modalRef.onClose$.subscribe(() => {
+      this._modalMap.delete(config.id);
+    });
+    return modalRef;
   }
 
   findClosestModal(element: ElementRef<HTMLElement>): ModalRef | undefined {
