@@ -8,12 +8,13 @@ export class HttpParams extends OriginHttpParams {
       if (excludeNil) {
         entries = entries.filter(([_, value]) => !isNil(value) && value !== '');
       }
-      fromObject = entries.reduce((obj, [key, value]) => ({ ...obj, [key]: convertToString(value) }), {});
+      fromObject = entries.reduce(
+        (obj, [key, value]) => ({ ...obj, [key]: isDate(value) ? value.toISOString() : '' + value }),
+        {}
+      );
       super({ fromObject });
     } else {
       super();
     }
   }
 }
-
-const convertToString = (value: any) => (isDate(value) ? value.toISOString() : '' + value);

@@ -10,25 +10,34 @@
       },
       "extends": ["plugin:@angular-eslint/recommended", "plugin:@angular-eslint/template/process-inline-templates"],
       "rules": {
-        "@angular-eslint/component-max-inline-declarations": [
+        "object-shorthand": ["error"],
+        "object-curly-spacing": ["error", "always"],
+        "arrow-parens": ["off", "as-needed"],
+        "brace-style": ["off", "off"],
+        "id-blacklist": "off",
+        "id-match": "off",
+        "import/order": "off",
+        "linebreak-style": "off",
+        "new-parens": "off",
+        "newline-per-chained-call": "off",
+        "no-extra-semi": "off",
+        "no-irregular-whitespace": "off",
+        "no-trailing-spaces": ["error", { "ignoreComments": true, "skipBlankLines": true }],
+        "no-underscore-dangle": "off",
+        "space-in-parens": ["off", "never"],
+        "quotes": ["error", "single", { "allowTemplateLiterals": true }],
+        "no-console": ["error"],
+        "curly": ["error", "multi-line"],
+        "no-useless-constructor": ["off"],
+        "prefer-arrow/prefer-arrow-functions": [
           "error",
           {
-            "animations": 20,
-            "styles": 8,
-            "template": 5
+            "disallowPrototype": true,
+            "singleReturnOnly": false,
+            "classPropertiesAllowed": false,
+            "allowStandaloneDeclarations": true
           }
         ],
-        "@angular-eslint/no-host-metadata-property": "off",
-        "@typescript-eslint/explicit-member-accessibility": [
-          "off",
-          {
-            "accessibility": "explicit"
-          }
-        ],
-        "@typescript-eslint/no-non-null-assertion": "off",
-        "@typescript-eslint/unified-signatures": "off",
-        "arrow-parens": ["off", "always"],
-        "brace-style": ["off", "off"],
         "comma-dangle": [
           "error",
           {
@@ -38,26 +47,15 @@
             "imports": "always-multiline"
           }
         ],
-        "id-blacklist": "off",
-        "id-match": "off",
-        "import/order": "off",
-        "linebreak-style": "off",
-        "new-parens": "off",
-        "newline-per-chained-call": "off",
-        "no-extra-semi": "off",
-        "no-irregular-whitespace": "off",
-        "no-trailing-spaces": [
-          "error",
-          {
-            "ignoreComments": true,
-            "skipBlankLines": true
-          }
-        ],
-        "no-underscore-dangle": "off",
-        "space-in-parens": ["off", "never"],
-        "@angular-eslint/component-selector": ["off"],
-        "@angular-eslint/directive-selector": ["off"],
-        "@angular-eslint/directive-class-suffix": ["off"],
+        "@typescript-eslint/explicit-member-accessibility": ["off", { "accessibility": "explicit" }],
+        "@typescript-eslint/no-non-null-assertion": "off",
+        "@typescript-eslint/unified-signatures": "off",
+        "@typescript-eslint/no-useless-constructor": ["error"],
+        "@typescript-eslint/interface-name-prefix": "off",
+        "@typescript-eslint/no-explicit-any": ["off"],
+        "@typescript-eslint/prefer-optional-chain": ["warn"],
+        "@typescript-eslint/explicit-module-boundary-types": ["off"],
+        "@typescript-eslint/no-shadow": ["error"],
         "@typescript-eslint/naming-convention": [
           "error",
           {
@@ -164,17 +162,32 @@
             ]
           }
         ],
-        "prefer-arrow/prefer-arrow-functions": [
+        "@typescript-eslint/typedef": [
           "error",
           {
-            "disallowPrototype": true,
-            "singleReturnOnly": false,
-            "classPropertiesAllowed": false,
-            "allowStandaloneDeclarations": true
+            "arrowParameter": false,
+            "memberVariableDeclaration": false,
+            "parameter": false
           }
         ],
-        "no-useless-constructor": ["off"],
-        "@typescript-eslint/no-useless-constructor": ["error"]
+        "@typescript-eslint/explicit-function-return-type": [
+          "error",
+          {
+            "allowExpressions": true
+          }
+        ],
+        "@angular-eslint/component-selector": ["off"],
+        "@angular-eslint/directive-selector": ["off"],
+        "@angular-eslint/directive-class-suffix": ["off"],
+        "@angular-eslint/no-host-metadata-property": ["off"],
+        "@angular-eslint/component-max-inline-declarations": [
+          "error",
+          {
+            "animations": 20,
+            "styles": 8,
+            "template": 5
+          }
+        ]
       }
     },
     {
