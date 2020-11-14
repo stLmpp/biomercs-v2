@@ -21,7 +21,6 @@ export class ModalRef<T = any, D = any, R = any> {
 
   close(value?: R): void {
     this.overlayRef.detach();
-    this.overlayRef.dispose();
     this.onClose$.next(value);
     this.onClose$.complete();
   }

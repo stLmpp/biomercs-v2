@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, HostBinding, Input, OnInit, ViewEncapsulation } from '@angular/core';
 import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
 import { AbstractComponent } from '../core/abstract-component';
-import { fadeInOutAnimation } from '../../shared/animations/fade-in-out';
+import { fadeInOutAnimation } from '../../shared/animations/fade';
 
 @Component({
   selector: 'button[bioButton],a[bioButton]',

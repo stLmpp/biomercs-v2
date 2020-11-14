@@ -19,6 +19,7 @@ import { ModalModule } from './components/modal/modal.module';
 import { IconModule } from './components/icon/icon.module';
 import { CardModule } from './components/card/card.module';
 import { CollapseModule } from './components/collapse/collapse.module';
+import { SnackBarModule } from './components/snack-bar/snack-bar.module';
 
 @NgModule({
   declarations: [AppComponent],
@@ -35,13 +36,13 @@ import { CollapseModule } from './components/collapse/collapse.module';
     StControlModule.forRoot(),
     AuthModule.forRoot(),
     ModalModule.forRoot(),
+    SnackBarModule.forRoot(),
     SpinnerModule,
     ButtonModule,
     IconModule,
     CardModule,
     CollapseModule,
   ],
-  providers: [],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

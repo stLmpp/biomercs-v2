@@ -5,6 +5,7 @@ import {
   ElementRef,
   EmbeddedViewRef,
   HostBinding,
+  HostListener,
   Inject,
   OnDestroy,
   OnInit,
@@ -15,14 +16,18 @@ import { CdkPortalOutlet, ComponentPortal, TemplatePortal } from '@angular/cdk/p
 import { OverlayRef } from '@angular/cdk/overlay';
 import { MODAL_LAST_FOCUSED_ELEMENT, ModalConfig } from './modal.config';
 import { ConfigurableFocusTrap, ConfigurableFocusTrapFactory } from '@angular/cdk/a11y';
+import { scaleInAnimation } from '../../shared/animations/scale';
+import { fadeOutAnimation } from '../../shared/animations/fade';
+import { AnimationEvent } from '@angular/animations';
 
 @Component({
   selector: 'modal',
   template: '<ng-template cdkPortalOutlet></ng-template>',
   styleUrls: ['./modal.component.scss'],
   encapsulation: ViewEncapsulation.None,
-  host: { class: 'modal', '[attr.modal]': `''` },
+  host: { class: 'modal', '[attr.modal]': `''`, '[@scaleIn]': '', '[@fadeOut]': '' },
   changeDetection: ChangeDetectionStrategy.OnPush,
+  animations: [scaleInAnimation(), fadeOutAnimation(100)],
 })
 export class ModalComponent<R = any> implements OnInit, OnDestroy {
   constructor(
@@ -45,6 +50,13 @@ export class ModalComponent<R = any> implements OnInit, OnDestroy {
     this._focusTrap = this.configurableFocusTrapFactory.create(this.elementRef.nativeElement);
     if (this.modalConfig.autoFocus) {
       await this._focusTrap.focusInitialElementWhenReady();
+    }
+  }
+
+  @HostListener('@fadeOut.done', ['$event'])
+  onFadeOutAnimation($event: AnimationEvent): void {
+    if ($event.toState === 'void') {
+      this.overlayRef.dispose();
     }
   }
 
