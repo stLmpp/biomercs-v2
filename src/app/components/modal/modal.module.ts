@@ -1,4 +1,4 @@
-import { ModuleWithProviders, NgModule } from '@angular/core';
+import { ModuleWithProviders, NgModule, Optional } from '@angular/core';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { ModalActionsDirective } from './modal-actions.directive';
 import { ModalTitleDirective } from './modal-title.directive';
@@ -43,7 +43,8 @@ export class ModalModule {
       providers: [
         {
           provide: MODAL_DEFAULT_CONFIG,
-          useValue: config ?? new ModalConfig<any>(),
+          useFactory: (parentConfig?: ModalConfig) => new ModalConfig({ ...parentConfig, ...config }),
+          deps: [[new Optional(), MODAL_DEFAULT_CONFIG]],
         },
       ],
     };
