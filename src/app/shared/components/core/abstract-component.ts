@@ -17,7 +17,7 @@ export abstract class AbstractComponent {
   @Input() bioSize: BioSizeInput;
 
   @HostBinding('class.primary') get primaryClass(): boolean {
-    return (this.bioType || 'primary') === 'primary';
+    return this.bioType === 'primary';
   }
 
   @HostBinding('class.accent') get accentClass(): boolean {

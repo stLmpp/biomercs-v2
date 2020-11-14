@@ -5,7 +5,6 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { StUtilsModule } from '@stlmpp/utils';
 import { StStoreModule } from '@stlmpp/store';
-import { SharedModule } from './shared/shared.module';
 import { AuthModule } from './auth/auth.module';
 import { CoreModule } from './core/core.module';
 import { HttpClientModule } from '@angular/common/http';
@@ -13,13 +12,9 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { StRouterModule } from '@stlmpp/router';
 import { environment } from '../environments/environment';
 import { StControlModule } from '@stlmpp/control';
-import { SpinnerModule } from './components/spinner/spinner.module';
-import { ButtonModule } from './components/button/button.module';
-import { ModalModule } from './components/modal/modal.module';
-import { IconModule } from './components/icon/icon.module';
-import { CardModule } from './components/card/card.module';
-import { CollapseModule } from './components/collapse/collapse.module';
-import { SnackBarModule } from './components/snack-bar/snack-bar.module';
+import { ModalModule } from './shared/components/modal/modal.module';
+import { SnackBarModule } from './shared/components/snack-bar/snack-bar.module';
+import { HeaderModule } from './header/header.module';
 
 @NgModule({
   declarations: [AppComponent],
@@ -29,7 +24,6 @@ import { SnackBarModule } from './components/snack-bar/snack-bar.module';
     BrowserAnimationsModule,
     HttpClientModule,
     CoreModule.forRoot(),
-    SharedModule.forRoot(),
     StUtilsModule.forRoot(),
     StStoreModule.forRoot({ production: environment.production }),
     StRouterModule.forRoot(),
@@ -37,11 +31,7 @@ import { SnackBarModule } from './components/snack-bar/snack-bar.module';
     AuthModule.forRoot(),
     ModalModule.forRoot(),
     SnackBarModule.forRoot(),
-    SpinnerModule,
-    ButtonModule,
-    IconModule,
-    CardModule,
-    CollapseModule,
+    HeaderModule,
   ],
   bootstrap: [AppComponent],
 })

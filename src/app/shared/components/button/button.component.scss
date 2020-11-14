@@ -30,10 +30,10 @@
     }
     &:not(.disabled) {
       &:focus {
-        box-shadow: 0 0 0 2px transparentize(get-color($type, 300), 0.1);
+        box-shadow: 0 0 0 2px transparentize(get-color($type, 300), 0.5);
       }
       &:active {
-        box-shadow: 0 0 0 3px transparentize(get-color($type, 300), 0.1);
+        box-shadow: 0 0 0 3px transparentize(get-color($type, 300), 0.5);
       }
       &:hover {
         $hover-color: get-color($type, 50);
@@ -61,6 +61,22 @@
   box-shadow: none;
   transition: box-shadow 200ms ease-in-out, background-color 200ms ease-in-out;
   font-weight: 500;
+  color: inherit;
+  background-color: transparent;
+  @include button($primary-type);
+  @include button($accent-type);
+  @include button($danger-type);
+  &:not(.disabled) {
+    &:focus {
+      box-shadow: 0 0 0 2px transparentize($white, 0.5);
+    }
+    &:active {
+      box-shadow: 0 0 0 3px transparentize($white, 0.5);
+    }
+    &:hover {
+      background-color: transparentize($white, 0.9);
+    }
+  }
   &.disabled {
     cursor: default;
   }
@@ -78,9 +94,6 @@
     padding: 0.75rem 1.5rem;
     font-size: 1.5rem;
   }
-  @include button($primary-type);
-  @include button($accent-type);
-  @include button($danger-type);
   &.icon,
   &.fab {
     padding: 0.25rem;

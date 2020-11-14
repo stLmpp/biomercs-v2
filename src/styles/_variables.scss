@@ -22,6 +22,15 @@ $primary-pallete: (
   600: #f7f7ff,
 );
 
+$primary: map-get($primary-pallete, 0);
+$primary-50: map-get($primary-pallete, 50);
+$primary-100: map-get($primary-pallete, 100);
+$primary-200: map-get($primary-pallete, 200);
+$primary-300: map-get($primary-pallete, 300);
+$primary-400: map-get($primary-pallete, 400);
+$primary-500: map-get($primary-pallete, 500);
+$primary-600: map-get($primary-pallete, 600);
+
 $accent-type: 'accent';
 $accent-pallete: (
   0: #00587a,
@@ -34,6 +43,15 @@ $accent-pallete: (
   600: #00acff,
 );
 
+$accent: map-get($accent-pallete, 0);
+$accent-50: map-get($accent-pallete, 50);
+$accent-100: map-get($accent-pallete, 100);
+$accent-200: map-get($accent-pallete, 200);
+$accent-300: map-get($accent-pallete, 300);
+$accent-400: map-get($accent-pallete, 400);
+$accent-500: map-get($accent-pallete, 500);
+$accent-600: map-get($accent-pallete, 600);
+
 $danger-type: 'danger';
 $danger-pallete: (
   0: #860f0f,
@@ -45,3 +63,12 @@ $danger-pallete: (
   500: #e55151,
   600: #f66464,
 );
+
+$danger: map-get($danger-pallete, 0);
+$danger-50: map-get($danger-pallete, 50);
+$danger-100: map-get($danger-pallete, 100);
+$danger-200: map-get($danger-pallete, 200);
+$danger-300: map-get($danger-pallete, 300);
+$danger-400: map-get($danger-pallete, 400);
+$danger-500: map-get($danger-pallete, 500);
+$danger-600: map-get($danger-pallete, 600);

@@ -7,4 +7,5 @@ export interface User extends BaseModel {
   lastOnline: Date;
   rememberMe: boolean;
   token: string;
+  admin: boolean;
 }

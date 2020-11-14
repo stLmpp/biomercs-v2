@@ -9,7 +9,7 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import { CdkAccordionItem } from '@angular/cdk/accordion';
-import { collapseAnimation, collapseIconAnimation } from '../../shared/animations/collapse';
+import { collapseAnimation, collapseIconAnimation } from '../../animations/collapse';
 import { CollapseTitleDirective } from './collapse-title.directive';
 
 @Component({

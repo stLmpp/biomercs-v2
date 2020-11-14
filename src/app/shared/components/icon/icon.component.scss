@@ -16,6 +16,7 @@
   @include icon($primary-type);
   @include icon($accent-type);
   @include icon($danger-type);
+  fill: currentColor;
   &.small {
     font-size: 18px;
     line-height: 18px;

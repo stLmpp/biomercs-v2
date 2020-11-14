@@ -8,7 +8,7 @@ import { PortalModule } from '@angular/cdk/portal';
 import { ModalService } from './modal.service';
 import { MODAL_DEFAULT_CONFIG, ModalConfig } from './modal.config';
 import { ModalCloseDirective } from './modal-close.directive';
-import { SharedModule } from '../../shared/shared.module';
+import { CommonModule } from '@angular/common';
 
 const DECLARATIONS = [
   ModalActionsDirective,
@@ -20,7 +20,7 @@ const DECLARATIONS = [
 
 @NgModule({
   declarations: [...DECLARATIONS],
-  imports: [SharedModule, OverlayModule, PortalModule],
+  imports: [CommonModule, OverlayModule, PortalModule],
   exports: [...DECLARATIONS],
 })
 export class ModalModule {

@@ -12,7 +12,7 @@ import { OverlayRef } from '@angular/cdk/overlay';
 import { SnackBarConfig } from './snack-bar.config';
 import { BehaviorSubject, isObservable, Observable, Subject, timer } from 'rxjs';
 import { take, takeUntil } from 'rxjs/operators';
-import { fadeInOutAnimation } from '../../shared/animations/fade';
+import { fadeInOutAnimation } from '../../animations/fade';
 import { AnimationEvent } from '@angular/animations';
 
 @Component({
@@ -40,6 +40,7 @@ export class SnackBarComponent implements OnInit, OnDestroy {
   }
 
   onClose$ = new Subject<void>();
+  onAction$ = new Subject<void>();
 
   loading$ = new BehaviorSubject<boolean>(false);
 
@@ -48,6 +49,12 @@ export class SnackBarComponent implements OnInit, OnDestroy {
     if ($event.toState === 'void') {
       this.overlayRef?.dispose();
     }
+  }
+
+  onAction(): void {
+    this.onAction$.next();
+    this.onAction$.complete();
+    this.closeWithObservable();
   }
 
   closeWithObservable(): void {

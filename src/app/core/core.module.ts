@@ -7,10 +7,11 @@ import { FormatErrorInterceptor } from './error/format-error.interceptor';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { ErrorComponent } from './error/error.component';
 import { HandleErrorDevInterceptor } from './error/handle-error-dev.interceptor';
-import { SharedModule } from '../shared/shared.module';
 import { AuthErrorInterceptor } from '../auth/auth-error.interceptor';
-import { ModalModule } from '../components/modal/modal.module';
-import { ButtonModule } from '../components/button/button.module';
+import { ModalModule } from '../shared/components/modal/modal.module';
+import { ButtonModule } from '../shared/components/button/button.module';
+import { SnackBarModule } from '../shared/components/snack-bar/snack-bar.module';
+import { CommonModule } from '@angular/common';
 
 const withInterceptors = (...interceptors: any[]): Provider[] =>
   interceptors.map(useClass => ({
@@ -21,8 +22,7 @@ const withInterceptors = (...interceptors: any[]): Provider[] =>
 
 @NgModule({
   declarations: [ErrorComponent],
-  exports: [ErrorComponent],
-  imports: [SharedModule, ModalModule.forChild(), ButtonModule],
+  imports: [CommonModule, ModalModule.forChild(), ButtonModule, SnackBarModule],
 })
 export class CoreModule {
   static forRoot(): ModuleWithProviders<CoreModule> {

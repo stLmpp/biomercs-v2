@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Inject, OnInit } from '@angular/core';
 import { HttpError } from '../../model/http-error';
-import { MODAL_DATA } from '../../components/modal/modal.config';
+import { MODAL_DATA } from '../../shared/components/modal/modal.config';
 
 @Component({
   selector: 'bio-error',

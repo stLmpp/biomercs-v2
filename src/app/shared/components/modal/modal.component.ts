@@ -16,8 +16,8 @@ import { CdkPortalOutlet, ComponentPortal, TemplatePortal } from '@angular/cdk/p
 import { OverlayRef } from '@angular/cdk/overlay';
 import { MODAL_LAST_FOCUSED_ELEMENT, ModalConfig } from './modal.config';
 import { ConfigurableFocusTrap, ConfigurableFocusTrapFactory } from '@angular/cdk/a11y';
-import { scaleInAnimation } from '../../shared/animations/scale';
-import { fadeOutAnimation } from '../../shared/animations/fade';
+import { scaleInAnimation } from '../../animations/scale';
+import { fadeOutAnimation } from '../../animations/fade';
 import { AnimationEvent } from '@angular/animations';
 
 @Component({

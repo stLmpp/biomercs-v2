@@ -1,6 +1,0 @@
-<div class="message">
-  {{ message }}
-</div>
-<div class="action" *ngIf="action">
-  <button bioButton type="button" (click)="closeWithObservable()" [loading]="loading$ | async">{{ action }}</button>
-</div>

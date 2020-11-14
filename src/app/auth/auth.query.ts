@@ -21,4 +21,8 @@ export class AuthQuery extends Query<Auth> {
   getToken(): string {
     return this.getState().user?.token ?? '';
   }
+
+  getIsAdmin(): boolean {
+    return !!this.getState().user?.admin;
+  }
 }
