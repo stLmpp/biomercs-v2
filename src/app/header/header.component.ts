@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { AuthQuery } from '../auth/auth.query';
 
 @Component({
@@ -7,10 +7,9 @@ import { AuthQuery } from '../auth/auth.query';
   styleUrls: ['./header.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class HeaderComponent implements OnInit {
+export class HeaderComponent {
   constructor(private authQuery: AuthQuery) {}
 
   user$ = this.authQuery.user$;
-
-  ngOnInit(): void {}
+  isLogged$ = this.authQuery.isLogged$;
 }

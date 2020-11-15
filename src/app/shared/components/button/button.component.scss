@@ -52,7 +52,6 @@
 }
 
 .button {
-  padding: 0.5rem 1.25rem;
   border-radius: 4px;
   border: 0;
   outline: 0;
@@ -60,9 +59,16 @@
   cursor: pointer;
   box-shadow: none;
   transition: box-shadow 200ms ease-in-out, background-color 200ms ease-in-out;
-  font-weight: 500;
   color: inherit;
   background-color: transparent;
+  vertical-align: baseline;
+  text-align: center;
+  line-height: 2rem;
+  padding: 0 1rem;
+  font-size: 0.85rem;
+  display: inline-block;
+  white-space: nowrap;
+  text-decoration: none;
   @include button($primary-type);
   @include button($accent-type);
   @include button($danger-type);
@@ -87,17 +93,19 @@
     cursor: progress;
   }
   &.small {
-    padding: 0.25rem 1rem;
+    line-height: 1.75rem;
     font-size: 0.75rem;
+    padding: 0 0.75rem;
   }
   &.large {
-    padding: 0.75rem 1.5rem;
-    font-size: 1.5rem;
+    line-height: 2.25rem;
+    font-size: 1.25rem;
   }
   &.icon,
   &.fab {
     padding: 0.25rem;
     border-radius: 50%;
+    line-height: 1;
   }
   &.icon {
     background-color: transparent;
@@ -115,6 +123,8 @@
   > .button-content-wrapper {
     opacity: 1;
     transition: opacity 200ms ease-in-out;
-    display: flex;
+    icon {
+      vertical-align: middle;
+    }
   }
 }

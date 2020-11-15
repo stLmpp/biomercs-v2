@@ -1,14 +1,14 @@
 @import 'variables';
-@import 'functions';
 
 :host {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: get-color($accent-type, 300);
+  background-color: $accent-300;
   padding: 1rem;
   > .brand {
     text-decoration: none;
     color: $primary-600;
+    font-size: 1.25rem;
   }
 }

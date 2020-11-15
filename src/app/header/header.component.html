@@ -1,6 +1,13 @@
 <a class="brand" routerLink="/"> Biomercs </a>
-<div class="end" *ngLet="user$ | async as user">
-  <button bioButton icon>
-    <icon>person</icon>
-  </button>
+<div class="end">
+  <ng-container *ngIf="isLogged$ | async; else notLogged">
+    <a bioButton *ngIf="user$ | async as user" [routerLink]="['/user', 'profile', user.id]">
+      <icon>person</icon>
+      {{ user.username }}
+    </a>
+  </ng-container>
+  <ng-template #notLogged>
+    <button bioButton>Register</button>
+    <button bioButton>Login</button>
+  </ng-template>
 </div>
