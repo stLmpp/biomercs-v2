@@ -19,6 +19,8 @@ import { Animations } from '../../animations/animations';
 import { Subject } from 'rxjs';
 import { auditTime, takeUntil } from 'rxjs/operators';
 import { FormFieldErrorComponent } from './error.component';
+import { FormFieldPrefixDirective } from './prefix.directive';
+import { FormFieldSuffixDirective } from './suffix.directive';
 
 let uniqueId = 0;
 
@@ -39,6 +41,8 @@ export class FormFieldComponent implements AfterContentInit, OnChanges, OnDestro
   @ContentChild(LabelDirective) labelDirective?: LabelDirective;
   @ContentChild(InputDirective) inputDirective?: InputDirective;
   @ContentChildren(FormFieldErrorComponent, { descendants: true }) errorComponents!: QueryList<FormFieldErrorComponent>;
+  @ContentChild(FormFieldPrefixDirective) prefixDirective?: FormFieldPrefixDirective;
+  @ContentChild(FormFieldSuffixDirective) sufixDirective?: FormFieldSuffixDirective;
 
   @Input() label?: string;
   @Input() id: string | number = uniqueId++;

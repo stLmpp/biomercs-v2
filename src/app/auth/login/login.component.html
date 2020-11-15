@@ -2,9 +2,12 @@
   <card>
     <h6 cardTitle>Login</h6>
     <card-content>
-      <form-field>
+      <form-field [loading]="true">
         <label>Teste</label>
         <input autocomplete="off" bioInput [control]="control" />
+        <button type="button" bioButton icon prefix>
+          <icon>person</icon>
+        </button>
         <errors>
           <error *error="'required'">Required</error>
           <error *error="'email'">Email</error>

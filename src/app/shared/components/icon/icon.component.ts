@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import { AbstractComponent } from '../core/abstract-component';
 
 @Component({
@@ -6,6 +6,7 @@ import { AbstractComponent } from '../core/abstract-component';
   templateUrl: './icon.component.html',
   styleUrls: ['./icon.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: { class: 'material-icons' },
+  host: { class: 'material-icons icon' },
+  encapsulation: ViewEncapsulation.None,
 })
 export class IconComponent extends AbstractComponent {}

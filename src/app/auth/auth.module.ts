@@ -8,10 +8,11 @@ import { FormModule } from '../shared/components/form/form.module';
 import { CardModule } from '../shared/components/card/card.module';
 import { StControlModule } from '@stlmpp/control';
 import { ButtonModule } from '../shared/components/button/button.module';
+import { IconModule } from '../shared/components/icon/icon.module';
 
 @NgModule({
   declarations: [LoginComponent],
-  imports: [AuthRoutingModule, FormModule, CardModule, StControlModule, ButtonModule],
+  imports: [AuthRoutingModule, FormModule, CardModule, StControlModule, ButtonModule, IconModule],
 })
 export class AuthModule {
   static forRoot(): ModuleWithProviders<AuthModule> {

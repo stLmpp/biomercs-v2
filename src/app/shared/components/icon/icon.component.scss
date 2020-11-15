@@ -11,7 +11,7 @@
   }
 }
 
-:host {
+.icon {
   line-height: 24px;
   @include icon($primary-type);
   @include icon($accent-type);

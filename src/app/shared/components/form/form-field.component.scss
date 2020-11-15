@@ -5,6 +5,33 @@
   > .input-wrapper {
     z-index: 1;
     position: relative;
+
+    &.has-prefix {
+      > .input {
+        padding-left: 1.25rem;
+      }
+    }
+    &.has-suffix {
+      > .input {
+        padding-right: 1.25rem;
+      }
+      > .spinner-wrapper {
+        right: calc(0.5rem + 18px);
+      }
+    }
+    &.has-prefix,
+    &.has-suffix {
+      .icon {
+        line-height: 18px;
+        font-size: 18px;
+      }
+      .button {
+        padding: 0;
+      }
+    }
+    &.disabled {
+      pointer-events: none;
+    }
     > .spinner-wrapper {
       position: absolute;
       display: flex;
@@ -13,6 +40,20 @@
       top: 0;
       bottom: 0;
       right: 0.5rem;
+    }
+    > .suffix-wrapper,
+    > .preffix-wrapper {
+      position: absolute;
+      display: flex;
+      align-items: center;
+      top: 0;
+      height: 100%;
+    }
+    > .suffix-wrapper {
+      right: 0.1rem;
+    }
+    > .preffix-wrapper {
+      left: 0.1rem;
     }
   }
   > .bottom-wrapper {

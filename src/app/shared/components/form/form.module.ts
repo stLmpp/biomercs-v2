@@ -8,6 +8,8 @@ import { FormFieldComponent } from './form-field.component';
 import { FormFieldErrorComponent } from './error.component';
 import { FormFieldHintDirective } from './hint.directive';
 import { NgLetModule } from '../../let/ng-let.module';
+import { FormFieldPrefixDirective } from './prefix.directive';
+import { FormFieldSuffixDirective } from './suffix.directive';
 
 @NgModule({
   declarations: [
@@ -17,6 +19,8 @@ import { NgLetModule } from '../../let/ng-let.module';
     FormFieldErrorsDirective,
     FormFieldErrorComponent,
     FormFieldHintDirective,
+    FormFieldPrefixDirective,
+    FormFieldSuffixDirective,
   ],
   exports: [
     InputDirective,
@@ -25,6 +29,8 @@ import { NgLetModule } from '../../let/ng-let.module';
     FormFieldErrorsDirective,
     FormFieldErrorComponent,
     FormFieldHintDirective,
+    FormFieldPrefixDirective,
+    FormFieldSuffixDirective,
   ],
   imports: [CommonModule, SpinnerModule, NgLetModule],
 })
