@@ -21,7 +21,7 @@
     "@angular/platform-browser-dynamic": "~11.0.0",
     "@angular/router": "~11.0.0",
     "@material/elevation": "~8.0.0",
-    "@stlmpp/control": "~1.0.1",
+    "@stlmpp/control": "~1.1.1",
     "@stlmpp/router": "~2.1.1",
     "@stlmpp/store": "~2.1.1",
     "@stlmpp/utils": "~2.1.1",

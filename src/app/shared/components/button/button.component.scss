@@ -1,5 +1,6 @@
 @import 'variables';
 @import 'functions';
+@import 'mixins';
 
 @mixin button($type) {
   &.#{$type} {
@@ -29,12 +30,6 @@
       }
     }
     &:not(.disabled) {
-      &:focus {
-        box-shadow: 0 0 0 2px transparentize(get-color($type, 300), 0.5);
-      }
-      &:active {
-        box-shadow: 0 0 0 3px transparentize(get-color($type, 300), 0.5);
-      }
       &:hover {
         $hover-color: get-color($type, 50);
         &:not(.icon),
@@ -58,7 +53,7 @@
   position: relative;
   cursor: pointer;
   box-shadow: none;
-  transition: box-shadow 200ms ease-in-out, background-color 200ms ease-in-out;
+  transition: background-color 200ms ease-in-out;
   color: inherit;
   background-color: transparent;
   vertical-align: baseline;
@@ -72,6 +67,7 @@
   @include button($primary-type);
   @include button($accent-type);
   @include button($danger-type);
+  @include form-focus();
   &:not(.disabled) {
     &:focus {
       box-shadow: 0 0 0 2px transparentize($white, 0.5);

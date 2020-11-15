@@ -47,7 +47,6 @@ export abstract class AbstractComponent {
   }
 
   @HostBinding('class.disabled')
-  @HostBinding('attr.disabled')
   get disabledClass(): boolean | null {
     return this._disabled || null;
   }

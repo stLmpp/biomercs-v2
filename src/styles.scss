@@ -4,10 +4,18 @@
 body {
   background-color: $dark;
   margin: 0;
+  box-sizing: border-box;
+}
+
+*,
+::before,
+::after {
+  box-sizing: border-box;
 }
 
 ::-webkit-scrollbar {
   width: 10px;
+  height: 10px;
 }
 ::-webkit-scrollbar-track {
   background: $light;

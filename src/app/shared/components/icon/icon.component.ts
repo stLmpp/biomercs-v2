@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { AbstractComponent } from '../core/abstract-component';
 
 @Component({
@@ -8,6 +8,4 @@ import { AbstractComponent } from '../core/abstract-component';
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'material-icons' },
 })
-export class IconComponent extends AbstractComponent implements OnInit {
-  ngOnInit(): void {}
-}
+export class IconComponent extends AbstractComponent {}

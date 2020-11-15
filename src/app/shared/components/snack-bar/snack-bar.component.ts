@@ -12,8 +12,8 @@ import { OverlayRef } from '@angular/cdk/overlay';
 import { SnackBarConfig } from './snack-bar.config';
 import { BehaviorSubject, isObservable, Observable, Subject, timer } from 'rxjs';
 import { take, takeUntil } from 'rxjs/operators';
-import { fadeInOutAnimation } from '../../animations/fade';
 import { AnimationEvent } from '@angular/animations';
+import { Animations } from '../../animations/animations';
 
 @Component({
   selector: 'snack-bar',
@@ -22,7 +22,7 @@ import { AnimationEvent } from '@angular/animations';
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   host: { class: 'snack-bar', '[@fadeInOut]': '' },
-  animations: [fadeInOutAnimation()],
+  animations: [Animations.fade.inOut()],
 })
 export class SnackBarComponent implements OnInit, OnDestroy {
   constructor(private overlayRef: OverlayRef, private snackBarConfig: SnackBarConfig) {}

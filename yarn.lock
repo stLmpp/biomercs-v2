@@ -1258,10 +1258,10 @@
     semver "7.3.2"
     semver-intersect "1.4.0"
 
-"@stlmpp/control@~1.0.1":
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/@stlmpp/control/-/control-1.0.1.tgz#48e4f4e7d4329c3d99930e73bd2981f8af66a9aa"
-  integrity sha512-QCy0zWHliveqVFoTNHHOQpE0zETlWdTLSuZkeEZ3NVvt1WnaiCrmwOcqftfT6hv2wIPtNw4NvnwhxAl7bepaBw==
+"@stlmpp/control@^1.1.1":
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/@stlmpp/control/-/control-1.1.1.tgz#ec08bee4bf54bb3cf39a6b0034f370fe2a4515a4"
+  integrity sha512-9QQvO6aI6mn2E1Re0UG1itVitn7Zfc2yd3eUoNe52B0B02FUFm6bQepIoEuOLJpJXPLH4pAuofB45Je+TclZcg==
   dependencies:
     "@angular/cdk" "~10.2.5"
     "@stlmpp/utils" "~2.1.1"

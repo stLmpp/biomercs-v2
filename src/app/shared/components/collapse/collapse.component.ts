@@ -4,24 +4,23 @@ import {
   ContentChildren,
   HostBinding,
   Input,
-  OnInit,
   QueryList,
   ViewEncapsulation,
 } from '@angular/core';
 import { CdkAccordionItem } from '@angular/cdk/accordion';
-import { collapseAnimation, collapseIconAnimation } from '../../animations/collapse';
 import { CollapseTitleDirective } from './collapse-title.directive';
+import { Animations } from '../../animations/animations';
 
 @Component({
   selector: 'collapse',
   templateUrl: './collapse.component.html',
   styleUrls: ['./collapse.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  animations: [collapseAnimation(), collapseIconAnimation()],
+  animations: [Animations.collapse.collapse(), Animations.collapse.collapseIcon()],
   encapsulation: ViewEncapsulation.None,
   host: { class: 'collapse' },
 })
-export class CollapseComponent extends CdkAccordionItem implements OnInit {
+export class CollapseComponent extends CdkAccordionItem {
   @Input() collapseTitle?: string;
 
   @ContentChildren(CollapseTitleDirective) collapseTitleDirectives!: QueryList<CollapseTitleDirective>;
@@ -32,6 +31,4 @@ export class CollapseComponent extends CdkAccordionItem implements OnInit {
   @HostBinding('class.disabled') get disabledClass(): boolean {
     return this.disabled;
   }
-
-  ngOnInit(): void {}
 }

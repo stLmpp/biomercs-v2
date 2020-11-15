@@ -1,0 +1,26 @@
+<ng-container *ngIf="labelDirective; else noLabelRef">
+  <ng-content select="label"></ng-content>
+</ng-container>
+<ng-template #noLabelRef>
+  <label [for]="id">{{ label }}</label>
+</ng-template>
+<div class="input-wrapper">
+  <div class="spinner-wrapper">
+    <spinner *ngIf="loading" [size]="0.1"></spinner>
+  </div>
+  <ng-content></ng-content>
+</div>
+<div class="bottom-wrapper">
+  <div
+    class="hints"
+    *ngIf="
+      !inputDirective?.controlDirective?.isTouched || !(inputDirective?.controlDirective?.control?.hasErrors$ | async)
+    "
+    @fadeIn
+  >
+    <ng-content select="hint:not([end]),[hint]:not([end])"></ng-content>
+    <div class="hint-spacer"></div>
+    <ng-content select="hint[end],[hint][end]"></ng-content>
+  </div>
+  <ng-content select="errors,[errors]"></ng-content>
+</div>

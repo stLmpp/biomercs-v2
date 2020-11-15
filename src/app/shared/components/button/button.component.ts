@@ -1,7 +1,6 @@
-import { ChangeDetectionStrategy, Component, HostBinding, Input, OnInit, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, HostBinding, Input, ViewEncapsulation } from '@angular/core';
 import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
 import { AbstractComponent } from '../core/abstract-component';
-import { fadeInOutAnimation } from '../../animations/fade';
 
 @Component({
   selector: 'button[bioButton],a[bioButton]',
@@ -10,9 +9,8 @@ import { fadeInOutAnimation } from '../../animations/fade';
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'button' },
-  animations: [fadeInOutAnimation()],
 })
-export class ButtonComponent extends AbstractComponent implements OnInit {
+export class ButtonComponent extends AbstractComponent {
   get disabledClass(): boolean | null {
     return !!(this.loading || this.disabled) || null;
   }
@@ -20,6 +18,11 @@ export class ButtonComponent extends AbstractComponent implements OnInit {
   @HostBinding('attr.tabindex')
   get tabindex(): number {
     return this.disabledClass ? -1 : this.tabIndex || 0;
+  }
+
+  @HostBinding('attr.disabled')
+  get disabledAttr(): boolean | null {
+    return this.disabledClass;
   }
 
   @Input() @HostBinding('class.loading') loading: BooleanInput;
@@ -38,6 +41,4 @@ export class ButtonComponent extends AbstractComponent implements OnInit {
   get isFab(): boolean {
     return coerceBooleanProperty(this.fab);
   }
-
-  ngOnInit(): void {}
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
 
 @Component({
@@ -7,7 +7,7 @@ import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
   styleUrls: ['./loading.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class LoadingComponent implements OnInit {
+export class LoadingComponent {
   private _noBox = false;
 
   @Input()
@@ -19,8 +19,6 @@ export class LoadingComponent implements OnInit {
   }
 
   @Input() show = false;
-
-  ngOnInit(): void {}
 
   static ngAcceptInputType_noBox: BooleanInput;
 }

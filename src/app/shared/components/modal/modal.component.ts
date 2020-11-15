@@ -16,9 +16,8 @@ import { CdkPortalOutlet, ComponentPortal, TemplatePortal } from '@angular/cdk/p
 import { OverlayRef } from '@angular/cdk/overlay';
 import { MODAL_LAST_FOCUSED_ELEMENT, ModalConfig } from './modal.config';
 import { ConfigurableFocusTrap, ConfigurableFocusTrapFactory } from '@angular/cdk/a11y';
-import { scaleInAnimation } from '../../animations/scale';
-import { fadeOutAnimation } from '../../animations/fade';
 import { AnimationEvent } from '@angular/animations';
+import { Animations } from '../../animations/animations';
 
 @Component({
   selector: 'modal',
@@ -27,7 +26,7 @@ import { AnimationEvent } from '@angular/animations';
   encapsulation: ViewEncapsulation.None,
   host: { class: 'modal', '[attr.modal]': `''`, '[@scaleIn]': '', '[@fadeOut]': '' },
   changeDetection: ChangeDetectionStrategy.OnPush,
-  animations: [scaleInAnimation(), fadeOutAnimation(100)],
+  animations: [Animations.scale.in(), Animations.fade.out(100)],
 })
 export class ModalComponent<R = any> implements OnInit, OnDestroy {
   constructor(

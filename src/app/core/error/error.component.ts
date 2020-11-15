@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 import { HttpError } from '../../model/http-error';
 import { MODAL_DATA } from '../../shared/components/modal/modal.config';
 
@@ -7,8 +7,6 @@ import { MODAL_DATA } from '../../shared/components/modal/modal.config';
   templateUrl: './error.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ErrorComponent implements OnInit {
+export class ErrorComponent {
   constructor(@Inject(MODAL_DATA) public httpError: HttpError) {}
-
-  ngOnInit(): void {}
 }

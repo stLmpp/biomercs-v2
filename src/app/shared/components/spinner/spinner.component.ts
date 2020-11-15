@@ -1,13 +1,18 @@
-import { ChangeDetectionStrategy, Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges, ViewEncapsulation } from '@angular/core';
 import { BooleanInput, coerceBooleanProperty, coerceNumberProperty, NumberInput } from '@angular/cdk/coercion';
+import { Animations } from '../../animations/animations';
+import { SimpleChangesCustom } from '../../../util/util';
 
 @Component({
   selector: 'spinner',
   templateUrl: './spinner.component.html',
   styleUrls: ['./spinner.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None,
+  host: { class: 'spinner', '[@fadeInOut]': '' },
+  animations: [Animations.fade.inOut()],
 })
-export class SpinnerComponent implements OnInit, OnChanges {
+export class SpinnerComponent implements OnChanges {
   @Input()
   set size(size: number) {
     size = coerceNumberProperty(size);
@@ -26,9 +31,7 @@ export class SpinnerComponent implements OnInit, OnChanges {
   @Input() medium: BooleanInput;
   @Input() large: BooleanInput;
 
-  ngOnInit(): void {}
-
-  ngOnChanges(changes: SimpleChanges): void {
+  ngOnChanges(changes: SimpleChangesCustom<SpinnerComponent>): void {
     if (changes.small && coerceBooleanProperty(changes.small.currentValue)) {
       this.size = 0.15;
     }
