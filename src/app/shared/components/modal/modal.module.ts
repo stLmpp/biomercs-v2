@@ -24,7 +24,7 @@ const DECLARATIONS = [
   exports: [...DECLARATIONS],
 })
 export class ModalModule {
-  static forRoot(config?: ModalConfig): ModuleWithProviders<ModalModule> {
+  static forRoot(config?: Partial<ModalConfig>): ModuleWithProviders<ModalModule> {
     return {
       ngModule: ModalModule,
       providers: [
@@ -37,7 +37,7 @@ export class ModalModule {
     };
   }
 
-  static forChild(config?: ModalConfig): ModuleWithProviders<ModalModule> {
+  static forChild(config?: Partial<ModalConfig>): ModuleWithProviders<ModalModule> {
     return {
       ngModule: ModalModule,
       providers: [

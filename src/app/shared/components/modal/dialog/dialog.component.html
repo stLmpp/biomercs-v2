@@ -1,0 +1,6 @@
+<h5 modalTitle *ngIf="data.title">{{ data.title }}</h5>
+<modal-content [innerHTML]="data.content"></modal-content>
+<modal-actions end>
+  <button bioButton primary *ngIf="data.btnNo">{{ data.btnNo }}</button>
+  <button bioButton accent *ngIf="data.btnYes">{{ data.btnYes }}</button>
+</modal-actions>

@@ -83,7 +83,7 @@ export class ModalService implements OnDestroy {
 
   open<T = any, D = any, R = any>(
     component: Type<T> | TemplateRef<T>,
-    _config?: Partial<ModalConfig>
+    _config?: Partial<ModalConfig<D>>
   ): ModalRef<T, D, R> {
     const config = this._mergeConfig(_config);
     const overlayRef = this._createOverlayRef(config);

@@ -9,10 +9,12 @@ import { CardModule } from '../shared/components/card/card.module';
 import { StControlModule } from '@stlmpp/control';
 import { ButtonModule } from '../shared/components/button/button.module';
 import { IconModule } from '../shared/components/icon/icon.module';
+import { AuthErrorInterceptor } from './auth-error.interceptor';
+import { DialogModule } from '../shared/components/modal/dialog/dialog.module';
 
 @NgModule({
   declarations: [LoginComponent],
-  imports: [AuthRoutingModule, FormModule, CardModule, StControlModule, ButtonModule, IconModule],
+  imports: [AuthRoutingModule, FormModule, CardModule, StControlModule, ButtonModule, IconModule, DialogModule],
 })
 export class AuthModule {
   static forRoot(): ModuleWithProviders<AuthModule> {
@@ -32,6 +34,11 @@ export class AuthModule {
         {
           provide: HTTP_INTERCEPTORS,
           useClass: AuthInterceptor,
+          multi: true,
+        },
+        {
+          provide: HTTP_INTERCEPTORS,
+          useClass: AuthErrorInterceptor,
           multi: true,
         },
       ],

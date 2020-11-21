@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { AuthCredentialsDto, AuthRegisterDto, AuthRegisterResponse } from '../model/auth';
 import { User } from '../model/user';
-import { map, tap } from 'rxjs/operators';
+import { tap } from 'rxjs/operators';
 import { AuthStore } from './auth.store';
 import { catchAndThrow } from '../util/operators/catchError';
 

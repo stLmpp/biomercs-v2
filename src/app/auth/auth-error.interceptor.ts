@@ -3,17 +3,15 @@ import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/c
 import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
 import { catchAndThrow } from '../util/operators/catchError';
+import { DialogService } from '../shared/components/modal/dialog/dialog.service';
 
 @Injectable({ providedIn: 'root' })
 export class AuthErrorInterceptor implements HttpInterceptor {
-  constructor(private router: Router) {}
+  constructor(private router: Router, private dialogService: DialogService) {}
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     return next.handle(req).pipe(
       catchAndThrow(err => {
-        /*
-
-       TODO
         switch (err.status) {
           case 403:
             this.dialogService.confirm({
@@ -34,7 +32,7 @@ export class AuthErrorInterceptor implements HttpInterceptor {
                 await this.router.navigate(['/auth', 'login']);
               });
             break;
-        }*/
+        }
       })
     );
   }

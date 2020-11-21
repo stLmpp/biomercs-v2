@@ -7,7 +7,6 @@ import { FormatErrorInterceptor } from './error/format-error.interceptor';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { ErrorComponent } from './error/error.component';
 import { HandleErrorDevInterceptor } from './error/handle-error-dev.interceptor';
-import { AuthErrorInterceptor } from '../auth/auth-error.interceptor';
 import { ModalModule } from '../shared/components/modal/modal.module';
 import { ButtonModule } from '../shared/components/button/button.module';
 import { SnackBarModule } from '../shared/components/snack-bar/snack-bar.module';
@@ -39,7 +38,6 @@ export class CoreModule {
           LoadingInterceptor,
           DateInterceptor,
           FormatErrorInterceptor,
-          AuthErrorInterceptor,
           HandleErrorDevInterceptor
         ),
       ],
