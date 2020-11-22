@@ -1,39 +1,48 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { AuthCredentialsDto, AuthRegisterDto, AuthRegisterResponse } from '../model/auth';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable, of } from 'rxjs';
+import { AuthCredentialsDto, AuthRegisterDto, AuthRegisterResponse, SteamLoggedEvent } from '../model/auth';
 import { User } from '../model/user';
-import { tap } from 'rxjs/operators';
+import { filter, tap } from 'rxjs/operators';
 import { AuthStore } from './auth.store';
 import { catchAndThrow } from '../util/operators/catchError';
+import { SocketIOService } from '../shared/socket-io/socket-io.service';
+import { AuthErrorInterceptor } from './auth-error.interceptor';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  constructor(private http: HttpClient, private authStore: AuthStore) {}
+  constructor(private http: HttpClient, private authStore: AuthStore, private socketIOService: SocketIOService) {}
 
   endPoint = 'auth';
 
   register(dto: AuthRegisterDto): Observable<AuthRegisterResponse> {
-    return this.http.post<AuthRegisterResponse>(`${this.endPoint}/register`, dto);
+    return this.http.post<AuthRegisterResponse>(`${this.endPoint}/register`, dto, {
+      headers: AuthErrorInterceptor.ignoreHeaders,
+    });
   }
 
   login(dto: AuthCredentialsDto): Observable<User> {
-    return this.http.post<User>(`${this.endPoint}/login`, dto).pipe(
-      tap(user => {
-        this.authStore.update({ user });
-      })
-    );
+    return this.http
+      .post<User>(`${this.endPoint}/login`, dto, { headers: AuthErrorInterceptor.ignoreHeaders })
+      .pipe(
+        tap(user => {
+          this.authStore.update({ user });
+        })
+      );
   }
 
   autoLogin(): Observable<User> {
-    return this.http.post<User>(`${this.endPoint}/auto-login`, undefined).pipe(
-      tap(user => {
-        this.authStore.update({ user });
-      }),
-      catchAndThrow(() => {
-        this.authStore.update({ user: null });
-      })
-    );
+    return this.http
+      .post<User>(`${this.endPoint}/auto-login`, undefined, { headers: AuthErrorInterceptor.ignoreHeaders })
+      .pipe(
+        tap(user => {
+          this.authStore.update({ user });
+        }),
+        catchAndThrow(() => {
+          this.authStore.update({ user: null });
+          return of(null);
+        })
+      );
   }
 
   resendCode(idUser: number): Observable<void> {
@@ -46,5 +55,28 @@ export class AuthService {
         this.authStore.update({ user });
       })
     );
+  }
+
+  loginSteam(uuid: string): Observable<string> {
+    const headers = new HttpHeaders().set('Content-Type', 'text/plain; charset=utf-8');
+    return this.http.post<string>(`${this.endPoint}/login-steam/${uuid}`, undefined, {
+      responseType: 'text',
+      headers,
+    } as any) as any;
+  }
+
+  loginSteamSocket(uuid: string): Observable<SteamLoggedEvent> {
+    return this.socketIOService
+      .fromEvent<SteamLoggedEvent>(SteamLoggedEvent.eventName)
+      .pipe(filter(event => event.uuid === uuid));
+  }
+
+  updateToken(token: string): Observable<User> {
+    this.authStore.update(state => ({ ...state, user: { token } as any }));
+    return this.autoLogin();
+  }
+
+  logout(): void {
+    this.authStore.update({ user: null });
   }
 }

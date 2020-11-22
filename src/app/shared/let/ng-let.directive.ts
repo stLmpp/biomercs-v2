@@ -1,10 +1,10 @@
 import { Directive, Input, OnDestroy, OnInit, TemplateRef, ViewContainerRef } from '@angular/core';
 
 class NgLetContext<T> {
-  $implicit: T | null = null;
-  ngLet: T | null = null;
+  $implicit!: T;
+  ngLet!: T;
 
-  setData(value: T | null): void {
+  setData(value: T): void {
     this.$implicit = value;
     this.ngLet = value;
   }
@@ -17,7 +17,7 @@ export class NgLetDirective<T> implements OnDestroy, OnInit {
   private _context = new NgLetContext<T>();
 
   @Input()
-  set ngLet(value: T | null) {
+  set ngLet(value: T) {
     this._context.setData(value);
   }
 

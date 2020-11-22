@@ -1,20 +1,24 @@
 import { Injectable } from '@angular/core';
 import * as io from 'socket.io-client';
 import { Observable, Subject } from 'rxjs';
-import { shareReplay, take } from 'rxjs/operators';
+import { shareReplay } from 'rxjs/operators';
 import { Socket } from 'socket.io-client';
 
-export class SocketIO {
-  constructor(private socket: typeof Socket) {}
-
+@Injectable({ providedIn: 'root' })
+export class SocketIOService {
+  private _socket?: typeof Socket;
   private _events = new Map<string, Subject<any>>();
 
-  disconnect$ = new Subject();
+  private _checkIfConnected(): typeof Socket {
+    if (!this._socket) {
+      this._socket = io('http://localhost:3000/', {});
+    }
+    return this._socket;
+  }
 
   disconnect(): void {
-    this.socket.disconnect();
-    this.disconnect$.next();
-    this.disconnect$.complete();
+    const socket = this._checkIfConnected();
+    socket.disconnect();
     for (const [, $event] of this._events) {
       $event.complete();
     }
@@ -24,8 +28,9 @@ export class SocketIO {
     if (this._events.has(eventName)) {
       return this._events.get(eventName)!.asObservable();
     }
+    const socket = this._checkIfConnected();
     const event$ = new Subject<T>();
-    this.socket.on(eventName, (data: T) => {
+    socket.on(eventName, (data: T) => {
       event$.next(data);
     });
     return event$.asObservable().pipe(shareReplay());
@@ -33,27 +38,11 @@ export class SocketIO {
 
   fromEventOnce<T>(eventName: string): Observable<T> {
     const event$ = new Subject<T>();
-    this.socket.on(eventName, (data: T) => {
+    const socket = this._checkIfConnected();
+    socket.on(eventName, (data: T) => {
       event$.next(data);
       event$.complete();
     });
     return event$.asObservable();
-  }
-}
-
-@Injectable({ providedIn: 'root' })
-export class SocketIOService {
-  private _socketMap = new Map<string, SocketIO>();
-
-  connect(host: string): SocketIO {
-    if (this._socketMap.has(host)) {
-      return this._socketMap.get(host)!;
-    }
-    const socket = new SocketIO(io('http://localhost:3000', {}));
-    this._socketMap.set(host, socket);
-    socket.disconnect$.pipe(take(1)).subscribe(() => {
-      this._socketMap.delete(host);
-    });
-    return socket;
   }
 }

@@ -11,8 +11,10 @@ import { AbstractComponent } from '../core/abstract-component';
   host: { class: 'button' },
 })
 export class ButtonComponent extends AbstractComponent {
+  private _loading = false;
+
   get disabledClass(): boolean | null {
-    return !!(this.loading || this.disabled) || null;
+    return this.loading || this.disabled || null;
   }
 
   @HostBinding('attr.tabindex')
@@ -25,7 +27,15 @@ export class ButtonComponent extends AbstractComponent {
     return this.disabledClass;
   }
 
-  @Input() @HostBinding('class.loading') loading: BooleanInput;
+  @Input()
+  @HostBinding('class.loading')
+  get loading(): boolean {
+    return this._loading;
+  }
+  set loading(loading: boolean) {
+    this._loading = coerceBooleanProperty(loading);
+  }
+
   @Input() tabIndex = 0;
 
   @Input() icon: BooleanInput;
@@ -41,4 +51,6 @@ export class ButtonComponent extends AbstractComponent {
   get isFab(): boolean {
     return coerceBooleanProperty(this.fab);
   }
+
+  static ngAcceptInputType_loading: BooleanInput;
 }

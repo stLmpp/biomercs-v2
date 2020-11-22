@@ -11,10 +11,22 @@ import { ButtonModule } from '../shared/components/button/button.module';
 import { IconModule } from '../shared/components/icon/icon.module';
 import { AuthErrorInterceptor } from './auth-error.interceptor';
 import { DialogModule } from '../shared/components/modal/dialog/dialog.module';
+import { CommonModule } from '@angular/common';
+import { NgLetModule } from '../shared/let/ng-let.module';
 
 @NgModule({
   declarations: [LoginComponent],
-  imports: [AuthRoutingModule, FormModule, CardModule, StControlModule, ButtonModule, IconModule, DialogModule],
+  imports: [
+    CommonModule,
+    AuthRoutingModule,
+    FormModule,
+    CardModule,
+    StControlModule,
+    ButtonModule,
+    IconModule,
+    DialogModule,
+    NgLetModule,
+  ],
 })
 export class AuthModule {
   static forRoot(): ModuleWithProviders<AuthModule> {
@@ -23,11 +35,7 @@ export class AuthModule {
       providers: [
         {
           provide: APP_INITIALIZER,
-          useFactory: (authService: AuthService) => async () => {
-            try {
-              await authService.autoLogin().toPromise();
-            } catch {}
-          },
+          useFactory: (authService: AuthService) => () => authService.autoLogin().toPromise(),
           deps: [AuthService],
           multi: true,
         },

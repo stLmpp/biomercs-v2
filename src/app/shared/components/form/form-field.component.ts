@@ -60,6 +60,9 @@ export class FormFieldComponent implements AfterContentInit, OnChanges, OnDestro
         this.inputDirective.controlDirective.control.stateChanged$
           .pipe(takeUntil(this._destroy$), auditTime(50))
           .subscribe(() => {
+            if (this.labelDirective) {
+              this.labelDirective.danger = !!this.inputDirective?.dangerClass;
+            }
             this.changeDetectorRef.markForCheck();
           });
         if (!isNil(this.loading) || !isNil(this.disabled)) {

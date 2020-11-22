@@ -21,3 +21,11 @@ export interface AuthCredentialsDto {
   password: string;
   rememberMe?: boolean;
 }
+
+export class SteamLoggedEvent {
+  uuid!: string;
+  token!: string;
+  error!: string | null | undefined;
+
+  static eventName = 'logged-steam';
+}

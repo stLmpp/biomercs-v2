@@ -1249,10 +1249,10 @@
     semver "7.3.2"
     semver-intersect "1.4.0"
 
-"@stlmpp/control@~2.0.2":
-  version "2.0.2"
-  resolved "https://registry.yarnpkg.com/@stlmpp/control/-/control-2.0.2.tgz#31c3465cecf0b9ce6dbd5ba38ad793b784a8676d"
-  integrity sha512-MHVn3Q82mvyeuOZaSJtF46dnW+NDI6B5kBDdYIz7iiUVOkOivZyXQE9ccuqPvagkDmdZtCFPQwXKQ54uX1xtTw==
+"@stlmpp/control@^2.0.4":
+  version "2.0.4"
+  resolved "https://registry.yarnpkg.com/@stlmpp/control/-/control-2.0.4.tgz#6b020547aab5d32dc0699bd8fd6bcc94a81f5c82"
+  integrity sha512-ISS5Zo2RPoA/uzGFxKHfN30J7YEYJVxKMvJiqN0L5iHUD+opRM17SaN5D4wmiM0KW7HhYsTomFIQLXr4RBX6HQ==
   dependencies:
     "@stlmpp/utils" "~3.1.1"
     date-fns "~2.16.1"

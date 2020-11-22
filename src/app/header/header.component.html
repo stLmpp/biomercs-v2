@@ -5,6 +5,7 @@
       <icon>person</icon>
       {{ user.username }}
     </a>
+    <a bioButton (click)="logout()" routerLink="/auth/login">Logout</a>
   </ng-container>
   <ng-template #notLogged>
     <a bioButton routerLink="/auth/register">Register</a>

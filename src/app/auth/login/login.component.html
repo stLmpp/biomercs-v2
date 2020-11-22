@@ -1,14 +1,51 @@
-<form novalidate>
+<form [controlGroup]="form" (groupSubmit)="login()">
   <card>
     <h6 cardTitle>Login</h6>
     <card-content>
       <form-field>
-        <label>Teste</label>
-        <input autocomplete="off" bioInput [control]="control" />
+        <label>Username</label>
+        <input autocomplete="username" bioInput controlName="username" />
+        <errors>
+          <error *error="'required'">Username is required</error>
+        </errors>
       </form-field>
+      <form-field>
+        <label>Password</label>
+        <input [type]="typePassword" autocomplete="current-password" bioInput controlName="password" />
+        <hint end><a routerLink="../forgot-password">Forgot password?</a></hint>
+        <errors>
+          <error *error="'required'">Password is required</error>
+        </errors>
+        <button
+          suffix
+          bioButton
+          icon
+          type="button"
+          (click)="typePassword = typePassword === 'password' ? 'text' : 'password'"
+        >
+          <icon>{{ typePassword === 'password' ? 'visibility_off' : 'visibility' }}</icon>
+        </button>
+      </form-field>
+      <label>
+        <input type="checkbox" controlName="rememberMe" />
+        Remember me
+      </label>
+      <p *ngIf="error$ | async as error" class="text-danger">{{ error }}</p>
     </card-content>
-    <card-actions>
-      <button bioButton primary (click)="control.reset()" type="button">Reset</button>
+    <card-actions end *ngLet="{ steam: loadingLoginSteam$ | async, login: loadingLogin$ | async } as loading">
+      <button
+        bioButton
+        primary
+        type="button"
+        (click)="loginSteam()"
+        [loading]="loading.steam"
+        [disabled]="loading.login"
+      >
+        Login Steam
+      </button>
+      <button bioButton primary type="submit" [disabled]="form.invalid || loading.steam" [loading]="loading.login">
+        Login
+      </button>
     </card-actions>
   </card>
 </form>

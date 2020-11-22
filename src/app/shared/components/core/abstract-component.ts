@@ -1,9 +1,10 @@
 import { Directive, HostBinding, Input } from '@angular/core';
 import { BioSizeInput, BioTypeInput } from './types';
 import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
+import { Destroyable } from '../../destroyable-component';
 
 @Directive()
-export abstract class AbstractComponent {
+export abstract class AbstractComponent extends Destroyable {
   @Input()
   get disabled(): boolean {
     return this._disabled;
