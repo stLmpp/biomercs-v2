@@ -1,0 +1,15 @@
+@import 'variables';
+
+.menu {
+  min-width: 150px;
+  background-color: $dark-overlay;
+  border-radius: $radius;
+  padding: 0.5rem 0;
+  display: flex;
+  flex-direction: column;
+  .menu-item {
+    width: 100%;
+    border-radius: 0;
+    text-align: start;
+  }
+}

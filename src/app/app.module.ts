@@ -15,9 +15,6 @@ import { StControlModule } from '@stlmpp/control';
 import { ModalModule } from './shared/components/modal/modal.module';
 import { SnackBarModule } from './shared/components/snack-bar/snack-bar.module';
 import { HeaderModule } from './header/header.module';
-import { CardModule } from './shared/components/card/card.module';
-import { IconModule } from './shared/components/icon/icon.module';
-import { ButtonModule } from './shared/components/button/button.module';
 
 @NgModule({
   declarations: [AppComponent],
@@ -35,9 +32,6 @@ import { ButtonModule } from './shared/components/button/button.module';
     ModalModule.forRoot(),
     SnackBarModule.forRoot(),
     HeaderModule,
-    CardModule,
-    IconModule,
-    ButtonModule,
   ],
   bootstrap: [AppComponent],
 })

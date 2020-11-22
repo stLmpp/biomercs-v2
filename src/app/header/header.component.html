@@ -1,11 +1,16 @@
 <a class="brand" routerLink="/"> Biomercs </a>
 <div class="end">
   <ng-container *ngIf="isLogged$ | async; else notLogged">
-    <a bioButton *ngIf="user$ | async as user" [routerLink]="['/user', 'profile', user.id]">
-      <icon>person</icon>
-      {{ user.username }}
-    </a>
-    <a bioButton (click)="logout()" routerLink="/auth/login">Logout</a>
+    <ng-container *ngIf="user$ | async as user">
+      <a bioButton [routerLink]="['/user', 'profile', user.id]" [menuTrigger]="menu" trigger="hover">
+        <icon>person</icon>
+        {{ user.username }}
+      </a>
+      <bio-menu #menu>
+        <a bioButton menuItem routerLink="/auth/login" (click)="logout()">Logout</a>
+        <a *ngIf="user.admin" bioButton menuItem routerLink="/admin">Admin</a>
+      </bio-menu>
+    </ng-container>
   </ng-container>
   <ng-template #notLogged>
     <a bioButton routerLink="/auth/register">Register</a>

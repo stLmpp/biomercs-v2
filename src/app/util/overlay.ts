@@ -33,3 +33,5 @@ export const overlayPositions: OverlayPositions = {
     overlayY: 'center',
   },
 };
+
+export const cdkOverlayTransparentBackdrop = 'cdk-overlay-transparent-backdrop';
