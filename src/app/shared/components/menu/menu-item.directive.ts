@@ -10,8 +10,8 @@ import { ButtonComponent } from '../button/button.component';
   providers: [{ provide: MenuItem, useExisting: forwardRef(() => MenuItemDirective) }],
 })
 export class MenuItemDirective extends MenuItem {
-  constructor(@Host() public menuComponent: MenuComponent, elementRef: ElementRef) {
-    super(menuComponent, elementRef);
+  constructor(@Host() public menu: MenuComponent, elementRef: ElementRef) {
+    super(menu, elementRef);
   }
 
   @Input()
@@ -39,11 +39,11 @@ export class MenuItemDirective extends MenuItem {
 })
 export class MenuItemButtonDirective extends MenuItem {
   constructor(
-    @Host() public menuComponent: MenuComponent,
+    @Host() public menu: MenuComponent,
     elementRef: ElementRef,
     @Self() private buttonComponent: ButtonComponent
   ) {
-    super(menuComponent, elementRef);
+    super(menu, elementRef);
   }
 
   isDisabled(): boolean {

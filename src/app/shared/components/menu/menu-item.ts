@@ -1,19 +1,19 @@
 import { FocusableOption } from '@angular/cdk/a11y';
 import { Directive, ElementRef, HostListener } from '@angular/core';
-import { MenuComponent } from './menu.component';
+import { Menu } from './menu';
 
 @Directive()
 export abstract class MenuItem implements FocusableOption {
-  protected constructor(public menuComponent: MenuComponent, public elementRef: ElementRef) {}
+  protected constructor(public menu: Menu, public elementRef: ElementRef) {}
 
   @HostListener('click')
   onClick(): void {
-    this.menuComponent.onClose();
+    this.menu.close();
   }
 
   @HostListener('keydown.enter')
   onKeydownEnter(): void {
-    this.menuComponent.onClose();
+    this.menu.close();
   }
 
   focus(): void {

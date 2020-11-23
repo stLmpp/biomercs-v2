@@ -2,13 +2,14 @@
 <div class="end">
   <ng-container *ngIf="isLogged$ | async; else notLogged">
     <ng-container *ngIf="user$ | async as user">
-      <a bioButton [routerLink]="['/user', 'profile', user.id]" [menuTrigger]="menu" trigger="hover">
+      <button type="button" bioButton [menuTrigger]="menu">
         <icon>person</icon>
         {{ user.username }}
-      </a>
+      </button>
       <bio-menu #menu>
-        <a bioButton menuItem routerLink="/auth/login" (click)="logout()">Logout</a>
+        <a bioButton menuItem [routerLink]="['/user', user.id, 'profile']">Profile</a>
         <a *ngIf="user.admin" bioButton menuItem routerLink="/admin">Admin</a>
+        <a bioButton menuItem routerLink="/auth/login" (click)="logout()">Logout</a>
       </bio-menu>
     </ng-container>
   </ng-container>

@@ -1,11 +1,12 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { Control, ControlGroup, Validators } from '@stlmpp/control';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { AuthService } from '../auth.service';
-import { finalize } from 'rxjs/operators';
+import { finalize, tap } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { catchAndThrow } from '../../util/operators/catchError';
 import { SnackBarService } from '../../shared/components/snack-bar/snack-bar.service';
+import { User } from '../../model/user';
 
 interface ForgotPasswordForm {
   email: string;
@@ -33,38 +34,34 @@ export class ForgotPasswordComponent {
 
   submit(): void {
     this.loading$.next(true);
+    this.emailForm.disable();
+    let request$: Observable<void | User>;
     if (this.emailSent$.value) {
       const { password, code } = this.emailForm.value;
-      this.authService
-        .changeForgottenPassword(code, password)
-        .pipe(
-          finalize(() => {
-            this.loading$.next(false);
-          }),
-          catchAndThrow(error => {
-            this.snackBarService.open(error.message);
-          })
-        )
-        .subscribe(() => {
+      request$ = this.authService.changeForgottenPassword(code, password).pipe(
+        tap(() => {
           this.router.navigate(['/']).then();
-        });
+          this.snackBarService.open('Password changed successfully');
+        })
+      );
     } else {
       const { email } = this.emailForm.value;
-      this.authService
-        .forgotPassword(email)
-        .pipe(
-          finalize(() => {
-            this.loading$.next(false);
-          }),
-          catchAndThrow(error => {
-            this.snackBarService.open(error.message);
-          })
-        )
-        .subscribe(() => {
+      request$ = this.authService.forgotPassword(email).pipe(
+        tap(() => {
           this.emailForm.get('password').setValidator(Validators.required);
           this.emailForm.get('code').setValidator(Validators.required);
           this.emailSent$.next(true);
-        });
+        })
+      );
     }
+    request$.pipe(
+      finalize(() => {
+        this.loading$.next(false);
+        this.emailForm.enable();
+      }),
+      catchAndThrow(error => {
+        this.snackBarService.open(error.message);
+      })
+    );
   }
 }

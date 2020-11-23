@@ -2,6 +2,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   ContentChildren,
+  forwardRef,
   QueryList,
   TemplateRef,
   ViewChild,
@@ -12,6 +13,7 @@ import { Animations } from '../../animations/animations';
 import { FocusKeyManager } from '@angular/cdk/a11y';
 import { MenuItem } from './menu-item';
 import { AnimationEvent } from '@angular/animations';
+import { Menu } from './menu';
 
 @Component({
   selector: 'bio-menu',
@@ -21,8 +23,9 @@ import { AnimationEvent } from '@angular/animations';
   exportAs: 'bio-menu',
   encapsulation: ViewEncapsulation.None,
   animations: [Animations.fade.inOut(100), Animations.scale.in(100, 0.8)],
+  providers: [{ provide: Menu, useExisting: forwardRef(() => MenuComponent) }],
 })
-export class MenuComponent {
+export class MenuComponent extends Menu {
   @ViewChild(TemplateRef) templateRef!: TemplateRef<any>;
 
   @ContentChildren(MenuItem, { descendants: true }) menuItens!: QueryList<MenuItem>;
@@ -34,11 +37,11 @@ export class MenuComponent {
 
   onMouseleave(): void {
     if (this.trigger === 'hover') {
-      this.onClose();
+      this.close();
     }
   }
 
-  onClose(): void {
+  close(): void {
     if (this.overlayRef) {
       this.overlayRef.detach();
     }
