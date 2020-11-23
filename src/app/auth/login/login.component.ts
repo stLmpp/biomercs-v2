@@ -10,6 +10,7 @@ import { Destroyable } from '../../shared/destroyable-component';
 import { DialogService } from '../../shared/components/modal/dialog/dialog.service';
 import { Router } from '@angular/router';
 import { catchAndThrow } from '../../util/operators/catchError';
+import { SnackBarService } from '../../shared/components/snack-bar/snack-bar.service';
 
 @Component({
   selector: 'bio-login',
@@ -22,7 +23,8 @@ export class LoginComponent extends Destroyable implements OnInit {
     private authService: AuthService,
     @Inject(WINDOW) private window: Window,
     private dialogService: DialogService,
-    private router: Router
+    private router: Router,
+    private snackBarService: SnackBarService
   ) {
     super();
   }
@@ -67,6 +69,7 @@ export class LoginComponent extends Destroyable implements OnInit {
                 }),
                 tap(() => {
                   this.router.navigate(['/']).then();
+                  this.snackBarService.open('Login successful!');
                 })
               );
             })
@@ -96,6 +99,7 @@ export class LoginComponent extends Destroyable implements OnInit {
       )
       .subscribe(() => {
         this.router.navigate(['/']).then();
+        this.snackBarService.open('Login successful!');
       });
   }
 
