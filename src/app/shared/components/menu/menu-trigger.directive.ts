@@ -1,18 +1,26 @@
-import { Directive, ElementRef, HostListener, Input, OnDestroy, ViewContainerRef } from '@angular/core';
+import { Directive, ElementRef, HostListener, Inject, Input, ViewContainerRef } from '@angular/core';
 import { MenuComponent } from './menu.component';
 import { Overlay } from '@angular/cdk/overlay';
 import { cdkOverlayTransparentBackdrop, overlayPositions } from '../../../util/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
 import { Destroyable } from '../../destroyable-component';
 import { takeUntil } from 'rxjs/operators';
+import { DOCUMENT } from '@angular/common';
 
 @Directive({
   selector: '[menuTrigger]',
 })
-export class MenuTriggerDirective extends Destroyable implements OnDestroy {
-  constructor(private overlay: Overlay, private elementRef: ElementRef, private viewContainerRef: ViewContainerRef) {
+export class MenuTriggerDirective extends Destroyable {
+  constructor(
+    private overlay: Overlay,
+    private elementRef: ElementRef,
+    private viewContainerRef: ViewContainerRef,
+    @Inject(DOCUMENT) private document: Document
+  ) {
     super();
   }
+
+  private _lastFocusedElement?: Element | null;
 
   @Input() menuTrigger!: MenuComponent;
   @Input() trigger: 'hover' | 'click' = 'click';
@@ -48,6 +56,9 @@ export class MenuTriggerDirective extends Destroyable implements OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe(() => {
         this.opened = false;
+        if (this._lastFocusedElement) {
+          (this._lastFocusedElement as HTMLElement).focus();
+        }
       });
     overlayRef
       .backdropClick()
@@ -60,12 +71,14 @@ export class MenuTriggerDirective extends Destroyable implements OnDestroy {
     this.menuTrigger.trigger = this.trigger;
     const templatePortal = new TemplatePortal(this.menuTrigger.templateRef, this.viewContainerRef);
     overlayRef.attach(templatePortal);
+    this.menuTrigger.initFocus();
     this.opened = true;
   }
 
   @HostListener('mouseenter')
   onMouseenter(): void {
-    if (this.trigger !== 'hover') {
+    if (this._isClick()) {
+      this._lastFocusedElement = this.document.activeElement;
       return;
     }
     this._createOverlay();
@@ -73,13 +86,9 @@ export class MenuTriggerDirective extends Destroyable implements OnDestroy {
 
   @HostListener('click')
   onClick(): void {
-    if (this.trigger !== 'click') {
+    if (!this._isClick()) {
       return;
     }
     this._createOverlay();
-  }
-
-  ngOnDestroy(): void {
-    super.ngOnDestroy();
   }
 }

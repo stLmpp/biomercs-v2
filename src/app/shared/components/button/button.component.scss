@@ -81,6 +81,7 @@
   }
   &.disabled {
     cursor: default;
+    color: hsla(0, 0%, 100%, 0.5);
   }
   &.loading {
     > .button-content-wrapper {

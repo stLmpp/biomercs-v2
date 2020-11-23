@@ -11,5 +11,22 @@
     width: 100%;
     border-radius: 0;
     text-align: start;
+    &.button:not(.disabled) {
+      &:focus {
+        box-shadow: none;
+        background-color: transparentize($white, 0.9);
+        &.primary,
+        &.accent,
+        &.danger {
+          background-color: transparentize($white, 0.9);
+          box-shadow: none;
+        }
+      }
+      &.primary,
+      &.accent,
+      &.danger {
+        background-color: transparent;
+      }
+    }
   }
 }

@@ -1,5 +1,13 @@
 <ng-template>
-  <div @fadeInOut @scaleIn class="menu" (mouseleave)="onMouseleave()">
+  <div
+    cdkTrapFocus
+    @fadeInOut
+    @scaleIn
+    (@fadeInOut.done)="onFadeDone($event)"
+    class="menu"
+    (mouseleave)="onMouseleave()"
+    (keydown)="focusManager?.onKeydown($event)"
+  >
     <ng-content></ng-content>
   </div>
 </ng-template>
