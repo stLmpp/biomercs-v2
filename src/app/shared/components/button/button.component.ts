@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, HostBinding, Input, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, HostBinding, Input, ViewEncapsulation } from '@angular/core';
 import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
 import { AbstractComponent } from '../core/abstract-component';
 
@@ -11,6 +11,10 @@ import { AbstractComponent } from '../core/abstract-component';
   host: { class: 'button' },
 })
 export class ButtonComponent extends AbstractComponent {
+  constructor(private elementRef: ElementRef<HTMLButtonElement>) {
+    super();
+  }
+
   private _loading = false;
 
   get disabledClass(): boolean | null {
@@ -19,7 +23,7 @@ export class ButtonComponent extends AbstractComponent {
 
   @HostBinding('attr.tabindex')
   get tabindex(): number {
-    return this.disabledClass ? -1 : this.tabIndex || 0;
+    return this.disabledClass ? -1 : this.elementRef.nativeElement.tabIndex || 0;
   }
 
   @HostBinding('attr.disabled')
@@ -35,8 +39,6 @@ export class ButtonComponent extends AbstractComponent {
   set loading(loading: boolean) {
     this._loading = coerceBooleanProperty(loading);
   }
-
-  @Input() tabIndex = 0;
 
   @Input() icon: BooleanInput;
 
