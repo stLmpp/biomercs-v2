@@ -63,11 +63,6 @@
     .errors {
       position: absolute;
       top: 0.25rem;
-      .error {
-        display: block;
-        font-size: 0.65rem;
-        color: $danger;
-      }
     }
     > .hints {
       display: flex;
