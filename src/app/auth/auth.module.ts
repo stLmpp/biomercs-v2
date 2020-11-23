@@ -13,9 +13,19 @@ import { AuthErrorInterceptor } from './auth-error.interceptor';
 import { DialogModule } from '../shared/components/modal/dialog/dialog.module';
 import { CommonModule } from '@angular/common';
 import { NgLetModule } from '../shared/let/ng-let.module';
+import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
+import {
+  ConfirmationCodeInputComponent,
+  ConfirmationCodeInputDirective,
+} from './confirmation-code-input/confirmation-code-input.component';
 
 @NgModule({
-  declarations: [LoginComponent],
+  declarations: [
+    LoginComponent,
+    ForgotPasswordComponent,
+    ConfirmationCodeInputComponent,
+    ConfirmationCodeInputDirective,
+  ],
   imports: [
     CommonModule,
     AuthRoutingModule,

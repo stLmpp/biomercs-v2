@@ -8,6 +8,7 @@ import { AuthStore } from './auth.store';
 import { catchAndThrow } from '../util/operators/catchError';
 import { SocketIOService } from '../shared/socket-io/socket-io.service';
 import { AuthErrorInterceptor } from './auth-error.interceptor';
+import { HttpParams } from '../util/http-params';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -78,5 +79,20 @@ export class AuthService {
 
   logout(): void {
     this.authStore.update({ user: null });
+  }
+
+  forgotPassword(email: string): Observable<void> {
+    const params = new HttpParams({ email });
+    return this.http.post<void>(`${this.endPoint}/forgot-password`, undefined, { params });
+  }
+
+  changeForgottenPassword(confirmationCode: number, password: string): Observable<User> {
+    return this.http
+      .post<User>(`${this.endPoint}/forgot-password/change-password`, { confirmationCode, password })
+      .pipe(
+        tap(user => {
+          this.authStore.update({ user });
+        })
+      );
   }
 }
