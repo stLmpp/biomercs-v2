@@ -28,4 +28,5 @@ export class SteamLoggedEvent {
   error!: string | null | undefined;
 
   static eventName = 'logged-steam';
+  static namespace = 'auth';
 }

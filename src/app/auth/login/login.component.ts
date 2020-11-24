@@ -5,7 +5,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { AuthService } from '../auth.service';
 import { WINDOW } from '../../core/window.service';
 import { v4 } from 'uuid';
-import { filter, finalize, switchMap, takeUntil, tap, withLatestFrom } from 'rxjs/operators';
+import { filter, finalize, switchMap, takeUntil, tap, timeout, withLatestFrom } from 'rxjs/operators';
 import { Destroyable } from '../../shared/destroyable-component';
 import { DialogService } from '../../shared/components/modal/dialog/dialog.service';
 import { Router } from '@angular/router';
@@ -51,6 +51,7 @@ export class LoginComponent extends Destroyable implements OnInit {
           const windowSteam = this.window.open(url, 'Login Steam', 'width=500');
           return this.authService.loginSteamSocket(uuid).pipe(
             takeUntil(this.destroy$),
+            timeout(5 * 60 * 1000), // Timeout after 5 minutes
             switchMap(({ token, error }) => {
               let request$: Observable<any>;
               if (error) {
@@ -72,6 +73,13 @@ export class LoginComponent extends Destroyable implements OnInit {
                   this.snackBarService.open('Login successful!');
                 })
               );
+            }),
+            catchAndThrow(err => {
+              if (err.name === 'TimeoutError') {
+                this.snackBarService.open('Login timeout');
+              } else {
+                this.snackBarService.open(err.message);
+              }
             })
           );
         }),

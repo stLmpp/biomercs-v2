@@ -6,6 +6,7 @@ export interface HttpError {
   message: string;
   status: number;
   error?: string;
+  name?: string;
 }
 
 export interface HttpErrorResponse extends NgHttpErrorResponse {

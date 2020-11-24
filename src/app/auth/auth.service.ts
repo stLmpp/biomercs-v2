@@ -68,7 +68,7 @@ export class AuthService {
 
   loginSteamSocket(uuid: string): Observable<SteamLoggedEvent> {
     return this.socketIOService
-      .fromEvent<SteamLoggedEvent>(SteamLoggedEvent.eventName)
+      .fromEvent<SteamLoggedEvent>(SteamLoggedEvent.namespace, SteamLoggedEvent.eventName)
       .pipe(filter(event => event.uuid === uuid));
   }
 

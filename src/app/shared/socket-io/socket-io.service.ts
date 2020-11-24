@@ -4,45 +4,59 @@ import { Observable, Subject } from 'rxjs';
 import { shareReplay } from 'rxjs/operators';
 import { Socket } from 'socket.io-client';
 
+interface SocketEntity {
+  socket: typeof Socket;
+  events: Map<string, Subject<any>>;
+}
+
 @Injectable({ providedIn: 'root' })
 export class SocketIOService {
-  private _socket?: typeof Socket;
   private _events = new Map<string, Subject<any>>();
 
-  private _checkIfConnected(): typeof Socket {
-    if (!this._socket) {
-      this._socket = io('http://localhost:3000/', {});
+  private _sockets = new Map<string, SocketEntity>();
+
+  private _checkIfExists(namespace: string): SocketEntity {
+    let socket = this._sockets.get(namespace);
+    if (!socket) {
+      socket = this._sockets
+        .set(namespace, { socket: io('http://localhost:3000/auth'), events: new Map() })
+        .get(namespace)!;
     }
-    return this._socket;
+    return socket;
   }
 
-  disconnect(): void {
-    const socket = this._checkIfConnected();
-    socket.disconnect();
+  disconnect(namespace: string): void {
+    const socket = this._checkIfExists(namespace);
+    socket.socket.disconnect();
     for (const [, $event] of this._events) {
       $event.complete();
     }
   }
 
-  fromEvent<T>(eventName: string): Observable<T> {
-    if (this._events.has(eventName)) {
-      return this._events.get(eventName)!.asObservable();
+  fromEvent<T>(namespace: string, eventName: string): Observable<T> {
+    const { socket, events } = this._checkIfExists(namespace);
+    if (events.has(eventName)) {
+      return events.get(eventName)!.asObservable();
     }
-    const socket = this._checkIfConnected();
     const event$ = new Subject<T>();
     socket.on(eventName, (data: T) => {
       event$.next(data);
     });
+    events.set(eventName, event$);
     return event$.asObservable().pipe(shareReplay());
   }
 
-  fromEventOnce<T>(eventName: string): Observable<T> {
+  fromEventOnce<T>(namespace: string, eventName: string): Observable<T> {
+    const { socket, events } = this._checkIfExists(namespace);
+    if (events.has(eventName)) {
+      return events.get(eventName)!.asObservable();
+    }
     const event$ = new Subject<T>();
-    const socket = this._checkIfConnected();
     socket.on(eventName, (data: T) => {
       event$.next(data);
       event$.complete();
     });
+    events.set(eventName, event$);
     return event$.asObservable();
   }
 }
