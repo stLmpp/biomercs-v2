@@ -60,7 +60,7 @@ export class AuthService {
 
   loginSteam(uuid: string): Observable<string> {
     const headers = new HttpHeaders().set('Content-Type', 'text/plain; charset=utf-8');
-    return this.http.post<string>(`${this.endPoint}/login-steam/${uuid}`, undefined, {
+    return this.http.post<string>(`${this.endPoint}/steam/login/${uuid}`, undefined, {
       responseType: 'text',
       headers,
     } as any) as any;
@@ -89,6 +89,16 @@ export class AuthService {
   changeForgottenPassword(confirmationCode: number, password: string): Observable<User> {
     return this.http
       .post<User>(`${this.endPoint}/forgot-password/change-password`, { confirmationCode, password })
+      .pipe(
+        tap(user => {
+          this.authStore.update({ user });
+        })
+      );
+  }
+
+  registerSteam(steamid: string, uuid: string, email: string): Observable<User> {
+    return this.http
+      .post<User>(`${this.endPoint}/steam/${steamid}/register`, { uuid, email })
       .pipe(
         tap(user => {
           this.authStore.update({ user });
