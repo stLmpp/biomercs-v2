@@ -8,12 +8,17 @@
         "project": ["tsconfig.json", "e2e/tsconfig.json"],
         "createDefaultProgram": true
       },
-      "extends": ["plugin:@angular-eslint/recommended", "plugin:@angular-eslint/template/process-inline-templates"],
+      "extends": [
+        "plugin:@angular-eslint/recommended",
+        "plugin:@angular-eslint/ng-cli-compat",
+        "plugin:@angular-eslint/ng-cli-compat--formatting-add-on",
+        "plugin:@angular-eslint/template/process-inline-templates"
+      ],
       "plugins": ["prefer-arrow"],
       "rules": {
         "object-shorthand": ["error"],
         "object-curly-spacing": ["error", "always"],
-        "arrow-parens": ["off", "as-needed"],
+        "arrow-parens": ["error", "as-needed"],
         "brace-style": ["off", "off"],
         "id-blacklist": "off",
         "id-match": "off",
@@ -30,24 +35,19 @@
         "no-console": ["error"],
         "curly": ["error", "multi-line"],
         "no-useless-constructor": ["off"],
-        "prefer-arrow/prefer-arrow-functions": [
-          "error",
-          {
-            "disallowPrototype": true,
-            "singleReturnOnly": false,
-            "classPropertiesAllowed": false,
-            "allowStandaloneDeclarations": true
-          }
-        ],
         "comma-dangle": [
           "error",
           {
             "objects": "always-multiline",
             "arrays": "always-multiline",
             "functions": "never",
-            "imports": "always-multiline"
+            "imports": "always-multiline",
+            "exports": "always-multiline"
           }
         ],
+        "arrow-body-style": ["error", "as-needed"],
+        "prefer-arrow-callback": ["error"],
+        "prefer-arrow/prefer-arrow-functions": ["off"],
         "@typescript-eslint/explicit-member-accessibility": ["off", { "accessibility": "explicit" }],
         "@typescript-eslint/no-non-null-assertion": "off",
         "@typescript-eslint/unified-signatures": "off",
@@ -78,6 +78,12 @@
             "modifiers": ["private"],
             "format": ["camelCase"],
             "leadingUnderscore": "require"
+          },
+          {
+            "selector": "memberLike",
+            "modifiers": ["protected"],
+            "format": ["camelCase"],
+            "leadingUnderscore": "allow"
           },
           {
             "selector": "typeLike",
@@ -168,19 +174,24 @@
           {
             "arrowParameter": false,
             "memberVariableDeclaration": false,
-            "parameter": false
+            "parameter": false,
+            "propertyDeclaration": true
           }
         ],
         "@typescript-eslint/explicit-function-return-type": [
           "error",
           {
-            "allowExpressions": true
+            "allowExpressions": true,
+            "allowTypedFunctionExpressions": true,
+            "allowHigherOrderFunctions": true
           }
         ],
         "@angular-eslint/component-selector": ["off"],
         "@angular-eslint/directive-selector": ["off"],
         "@angular-eslint/directive-class-suffix": ["off"],
         "@angular-eslint/no-host-metadata-property": ["off"],
+        "@angular-eslint/no-input-rename": ["off"],
+        "@angular-eslint/no-inputs-metadata-property": ["off"],
         "@angular-eslint/component-max-inline-declarations": [
           "error",
           {
@@ -188,14 +199,24 @@
             "styles": 8,
             "template": 5
           }
-        ]
+        ],
+        "@angular-eslint/component-class-suffix": ["off"],
+        "@angular-eslint/prefer-on-push-component-change-detection": ["warn"],
+        "@angular-eslint/use-lifecycle-interface": ["warn"]
       }
     },
     {
       "files": ["*.html"],
       "extends": ["plugin:@angular-eslint/template/recommended"],
       "rules": {
-        "@angular-eslint/template/no-call-expression": "error"
+        "@angular-eslint/template-no-negated-async": ["error"],
+        "@angular-eslint/template-no-call-expression": ["error"]
+      }
+    },
+    {
+      "files": ["*.spec.ts"],
+      "rules": {
+        "@angular-eslint/component-max-inline-declarations": ["off"]
       }
     }
   ]

@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import { Animations } from '../../animations/animations';
 
 @Component({
@@ -7,5 +7,6 @@ import { Animations } from '../../animations/animations';
   host: { class: 'error', '[@slideIn]': '' },
   encapsulation: ViewEncapsulation.None,
   animations: [Animations.slide.in()],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FormFieldErrorComponent {}
