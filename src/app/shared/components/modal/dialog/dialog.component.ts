@@ -6,14 +6,15 @@ import { MODAL_DATA } from '../modal.config';
 import { take, takeUntil } from 'rxjs/operators';
 import { Destroyable } from '../../../destroyable-component';
 import { catchAndThrow } from '../../../../util/operators/catchError';
+import { isFunction } from '@stlmpp/utils';
 
 export interface DialogData {
   title?: string | null;
   content: string | SafeHtml;
   btnYes?: string | null;
   btnNo?: string | null;
-  yesObservable?: Observable<any>;
-  noObservable?: Observable<any>;
+  yesAction?: ((modalRef: ModalRef<DialogComponent, DialogData, boolean>) => any) | Observable<any>;
+  noAction?: ((modalRef: ModalRef<DialogComponent, DialogData, boolean>) => any) | Observable<any>;
 }
 
 @Component({
@@ -32,41 +33,43 @@ export class DialogComponent extends Destroyable {
 
   loading$ = new BehaviorSubject<boolean>(false);
 
-  yes(): void {
-    if (isObservable(this.data.yesObservable)) {
-      this.loading$.next(true);
-      this.data.yesObservable
-        .pipe(
-          take(1),
-          takeUntil(this.destroy$),
-          catchAndThrow(() => {
-            this.loading$.next(false);
-          })
-        )
-        .subscribe(() => {
+  private _proccessObservable(observable: Observable<any>, action: boolean): void {
+    this.loading$.next(true);
+    observable
+      .pipe(
+        take(1),
+        takeUntil(this.destroy$),
+        catchAndThrow(() => {
           this.loading$.next(false);
-          this.modalRef.close(true);
-        });
+        })
+      )
+      .subscribe(() => {
+        this.loading$.next(false);
+        this.modalRef.close(action);
+      });
+  }
+
+  yes(): void {
+    if (isObservable(this.data.yesAction)) {
+      this._proccessObservable(this.data.yesAction, true);
+    } else if (isFunction(this.data.yesAction)) {
+      const result = this.data.yesAction(this.modalRef);
+      if (isObservable(result)) {
+        this._proccessObservable(result, true);
+      }
     } else {
       this.modalRef.close(true);
     }
   }
 
   no(): void {
-    if (isObservable(this.data.noObservable)) {
-      this.loading$.next(true);
-      this.data.noObservable
-        .pipe(
-          take(1),
-          takeUntil(this.destroy$),
-          catchAndThrow(() => {
-            this.loading$.next(false);
-          })
-        )
-        .subscribe(() => {
-          this.loading$.next(false);
-          this.modalRef.close(false);
-        });
+    if (isObservable(this.data.noAction)) {
+      this._proccessObservable(this.data.noAction, false);
+    } else if (isFunction(this.data.noAction)) {
+      const result = this.data.noAction(this.modalRef);
+      if (isObservable(result)) {
+        this._proccessObservable(result, false);
+      }
     } else {
       this.modalRef.close(false);
     }

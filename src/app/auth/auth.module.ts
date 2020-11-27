@@ -18,6 +18,7 @@ import {
   ConfirmationCodeInputComponent,
   ConfirmationCodeInputDirective,
 } from './confirmation-code-input/confirmation-code-input.component';
+import { SteamRegisterComponent } from './steam-register/steam-register.component';
 
 @NgModule({
   declarations: [
@@ -25,6 +26,7 @@ import {
     ForgotPasswordComponent,
     ConfirmationCodeInputComponent,
     ConfirmationCodeInputDirective,
+    SteamRegisterComponent,
   ],
   imports: [
     CommonModule,

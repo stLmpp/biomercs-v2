@@ -8,9 +8,10 @@ import { v4 } from 'uuid';
 import { filter, finalize, switchMap, takeUntil, tap, timeout, withLatestFrom } from 'rxjs/operators';
 import { Destroyable } from '../../shared/destroyable-component';
 import { DialogService } from '../../shared/components/modal/dialog/dialog.service';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { catchAndThrow } from '../../util/operators/catchError';
 import { SnackBarService } from '../../shared/components/snack-bar/snack-bar.service';
+import { User } from '../../model/user';
 
 @Component({
   selector: 'bio-login',
@@ -24,7 +25,8 @@ export class LoginComponent extends Destroyable implements OnInit {
     @Inject(WINDOW) private window: Window,
     private dialogService: DialogService,
     private router: Router,
-    private snackBarService: SnackBarService
+    private snackBarService: SnackBarService,
+    private activatedRoute: ActivatedRoute
   ) {
     super();
   }
@@ -52,25 +54,42 @@ export class LoginComponent extends Destroyable implements OnInit {
           return this.authService.loginSteamSocket(uuid).pipe(
             takeUntil(this.destroy$),
             timeout(5 * 60 * 1000), // Timeout after 5 minutes
-            switchMap(({ token, error }) => {
-              let request$: Observable<any>;
+            switchMap(({ token, error, steamid }) => {
+              let request$: Observable<boolean | User>;
               if (error) {
-                request$ = this.dialogService.confirm({
-                  title: 'Something went wrong',
-                  content: error,
-                  btnYes: 'Ok',
-                  btnNo: null,
-                });
+                windowSteam?.close();
+                request$ = this.dialogService
+                  .confirm({
+                    title: error,
+                    content: 'Want to create an accont?',
+                    btnYes: 'Create account',
+                    btnNo: 'Close',
+                  })
+                  .pipe(
+                    tap(result => {
+                      if (result) {
+                        if (steamid) {
+                          this.authService.addSteamToken(steamid, token);
+                        }
+                        this.router
+                          .navigate(['../', 'steam', steamid, 'register'], { relativeTo: this.activatedRoute })
+                          .then();
+                      } else {
+                        this.router.navigate(['/']).then();
+                      }
+                    })
+                  );
               } else {
-                request$ = this.authService.updateToken(token);
+                request$ = this.authService.updateToken(token).pipe(
+                  tap(() => {
+                    this.router.navigate(['/']).then();
+                    this.snackBarService.open('Login successful!');
+                  })
+                );
               }
               return request$.pipe(
                 finalize(() => {
                   windowSteam?.close();
-                }),
-                tap(() => {
-                  this.router.navigate(['/']).then();
-                  this.snackBarService.open('Login successful!');
                 })
               );
             }),

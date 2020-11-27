@@ -25,7 +25,8 @@ export interface AuthCredentialsDto {
 export class SteamLoggedEvent {
   uuid!: string;
   token!: string;
-  error!: string | null | undefined;
+  error: string | null | undefined;
+  steamid: string | null | undefined;
 
   static eventName = 'logged-steam';
   static namespace = 'auth';

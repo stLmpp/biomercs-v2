@@ -31,7 +31,7 @@ export class ConfirmationCodeInputDirective implements FocusableOption {
 }
 
 @Component({
-  selector: 'bio-confirmation-code-input[control],bio-confirmation-code-input[controlName]',
+  selector: 'bio-confirmation-code-input',
   templateUrl: './confirmation-code-input.component.html',
   styleUrls: ['./confirmation-code-input.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -100,6 +100,14 @@ export class ConfirmationCodeInputComponent
 
   setDisabled(disabled: boolean): void {
     this.form.disable(disabled);
+  }
+
+  onPaste($event: ClipboardEvent): void {
+    const clipboardData = $event.clipboardData;
+    const pastedText = clipboardData?.getData('text');
+    if (pastedText?.length === 6) {
+      this.array.setValue(pastedText.split(''));
+    }
   }
 
   ngOnInit(): void {

@@ -23,7 +23,7 @@ export class ButtonComponent extends AbstractComponent {
 
   @HostBinding('attr.tabindex')
   get tabindex(): number {
-    return this.disabledClass ? -1 : this.elementRef.nativeElement.tabIndex || 0;
+    return this.disabledClass ? -1 : this.nativeElement.tabIndex || 0;
   }
 
   @HostBinding('attr.disabled')
@@ -52,6 +52,10 @@ export class ButtonComponent extends AbstractComponent {
   @HostBinding('class.fab')
   get isFab(): boolean {
     return coerceBooleanProperty(this.fab);
+  }
+
+  get nativeElement(): HTMLButtonElement {
+    return this.elementRef.nativeElement;
   }
 
   static ngAcceptInputType_loading: BooleanInput;

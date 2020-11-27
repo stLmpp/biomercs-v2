@@ -14,6 +14,8 @@ import { HttpParams } from '../util/http-params';
 export class AuthService {
   constructor(private http: HttpClient, private authStore: AuthStore, private socketIOService: SocketIOService) {}
 
+  private _steamidAuthMap = new Map<string, string>();
+
   endPoint = 'auth';
 
   register(dto: AuthRegisterDto): Observable<AuthRegisterResponse> {
@@ -96,13 +98,25 @@ export class AuthService {
       );
   }
 
-  registerSteam(steamid: string, uuid: string, email: string): Observable<User> {
-    return this.http
-      .post<User>(`${this.endPoint}/steam/${steamid}/register`, { uuid, email })
-      .pipe(
-        tap(user => {
-          this.authStore.update({ user });
-        })
-      );
+  registerSteam(steamid: string, email: string, token: string): Observable<AuthRegisterResponse> {
+    const headers = new HttpHeaders({ 'authorization-steam': token });
+    return this.http.post<AuthRegisterResponse>(`${this.endPoint}/steam/register`, { email, steamid }, { headers });
+  }
+
+  validateTokenRegisterSteam(steamid: string, token: string): Observable<boolean> {
+    const headers = new HttpHeaders({ 'authorization-steam': token });
+    return this.http.post<boolean>(`${this.endPoint}/steam/${steamid}/validate-token`, undefined, { headers });
+  }
+
+  addSteamToken(steamid: string, token: string): void {
+    this._steamidAuthMap.set(steamid, token);
+  }
+
+  removeSteamToken(steamid: string): void {
+    this._steamidAuthMap.delete(steamid);
+  }
+
+  getSteamToken(steamid: string): string | undefined {
+    return this._steamidAuthMap.get(steamid);
   }
 }
