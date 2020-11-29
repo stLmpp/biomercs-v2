@@ -5,7 +5,6 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { StUtilsModule } from '@stlmpp/utils';
 import { StStoreModule } from '@stlmpp/store';
-import { AuthModule } from './auth/auth.module';
 import { CoreModule } from './core/core.module';
 import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -24,7 +23,6 @@ import { HeaderModule } from './header/header.module';
     BrowserAnimationsModule,
     HttpClientModule,
     CoreModule.forRoot(),
-    AuthModule.forRoot(),
     StUtilsModule.forRoot(),
     StStoreModule.forRoot({ production: environment.production }),
     StRouterModule.forRoot(),

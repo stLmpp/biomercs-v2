@@ -1,4 +1,4 @@
-import { LOCALE_ID, ModuleWithProviders, NgModule, Provider } from '@angular/core';
+import { APP_INITIALIZER, LOCALE_ID, ModuleWithProviders, NgModule, Provider } from '@angular/core';
 import { WINDOW_PROVIDERS } from './window.service';
 import { ApiInterceptor } from './api.interceptor';
 import { LoadingInterceptor } from './loading/loading.interceptor';
@@ -11,6 +11,9 @@ import { ModalModule } from '../shared/components/modal/modal.module';
 import { ButtonModule } from '../shared/components/button/button.module';
 import { SnackBarModule } from '../shared/components/snack-bar/snack-bar.module';
 import { CommonModule } from '@angular/common';
+import { AuthService } from '../auth/auth.service';
+import { AuthInterceptor } from '../auth/auth.interceptor';
+import { AuthErrorInterceptor } from '../auth/auth-error.interceptor';
 
 const withInterceptors = (...interceptors: any[]): Provider[] =>
   interceptors.map(useClass => ({
@@ -21,7 +24,7 @@ const withInterceptors = (...interceptors: any[]): Provider[] =>
 
 @NgModule({
   declarations: [ErrorComponent],
-  imports: [CommonModule, ModalModule.forChild(), ButtonModule, SnackBarModule],
+  imports: [CommonModule, ModalModule, ButtonModule, SnackBarModule],
 })
 export class CoreModule {
   static forRoot(): ModuleWithProviders<CoreModule> {
@@ -34,12 +37,20 @@ export class CoreModule {
         },
         ...WINDOW_PROVIDERS,
         ...withInterceptors(
+          AuthInterceptor,
+          AuthErrorInterceptor,
           ApiInterceptor,
           LoadingInterceptor,
           DateInterceptor,
           FormatErrorInterceptor,
           HandleErrorDevInterceptor
         ),
+        {
+          provide: APP_INITIALIZER,
+          useFactory: (authService: AuthService) => () => authService.autoLogin().toPromise(),
+          deps: [AuthService],
+          multi: true,
+        },
       ],
     };
   }
