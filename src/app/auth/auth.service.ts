@@ -14,7 +14,7 @@ import { HttpParams } from '../util/http-params';
 export class AuthService {
   constructor(private http: HttpClient, private authStore: AuthStore, private socketIOService: SocketIOService) {}
 
-  private _steamidAuthMap = new Map<string, string>();
+  private _steamidAuthMap = new Map<string, [string, number?]>();
 
   endPoint = 'auth';
 
@@ -108,15 +108,15 @@ export class AuthService {
     return this.http.post<boolean>(`${this.endPoint}/steam/${steamid}/validate-token`, undefined, { headers });
   }
 
-  addSteamToken(steamid: string, token: string): void {
-    this._steamidAuthMap.set(steamid, token);
+  addSteamToken(steamid: string, token: string, idUser?: number): void {
+    this._steamidAuthMap.set(steamid, [token, idUser]);
   }
 
   removeSteamToken(steamid: string): void {
     this._steamidAuthMap.delete(steamid);
   }
 
-  getSteamToken(steamid: string): string | undefined {
+  getSteamToken(steamid: string): [string, number?] | undefined {
     return this._steamidAuthMap.get(steamid);
   }
 }

@@ -20,10 +20,10 @@ export class SteamRegisterGuard implements CanActivate {
     if (!steamid) {
       return urlTree;
     }
-    const token = this.authService.getSteamToken(steamid);
-    if (!token) {
+    const tupleToken = this.authService.getSteamToken(steamid);
+    if (!tupleToken) {
       return urlTree;
     }
-    return this.authService.validateTokenRegisterSteam(steamid, token).pipe(map(isValid => isValid || urlTree));
+    return this.authService.validateTokenRegisterSteam(steamid, tupleToken[0]).pipe(map(isValid => isValid || urlTree));
   }
 }

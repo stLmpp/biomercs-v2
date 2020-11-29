@@ -25,9 +25,16 @@ export interface AuthCredentialsDto {
 export class SteamLoggedEvent {
   uuid!: string;
   token!: string;
-  error: string | null | undefined;
-  steamid: string | null | undefined;
+  error?: string;
+  errorType?: SteamLoggedEventErrorType;
+  steamid?: string;
+  idUser?: number;
 
   static eventName = 'logged-steam';
   static namespace = 'auth';
+}
+
+export enum SteamLoggedEventErrorType {
+  userNotFound,
+  userNotConfirmed,
 }

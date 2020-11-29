@@ -27,7 +27,7 @@ import { Animations } from '../../animations/animations';
 export class SnackBarComponent implements OnInit, OnDestroy {
   constructor(private overlayRef: OverlayRef, private snackBarConfig: SnackBarConfig) {}
 
-  private _destroy$ = new Subject();
+  private _cancelTimeout$ = new Subject();
 
   @Input() message?: string;
   @Input() action?: string | null;
@@ -44,11 +44,35 @@ export class SnackBarComponent implements OnInit, OnDestroy {
 
   loading$ = new BehaviorSubject<boolean>(false);
 
+  private _startTimeout(): void {
+    if (this.snackBarConfig.timeout) {
+      timer(this.snackBarConfig.timeout)
+        .pipe(takeUntil(this._cancelTimeout$))
+        .subscribe(() => {
+          if (this.snackBarConfig.timeoutCloseWithObservable) {
+            this.closeWithObservable();
+          } else {
+            this.close();
+          }
+        });
+    }
+  }
+
   @HostListener('@fadeInOut.done', ['$event'])
   onFadeInOutDone($event: AnimationEvent): void {
     if ($event.toState === 'void') {
       this.overlayRef?.dispose();
     }
+  }
+
+  @HostListener('mouseenter')
+  onMouseenter(): void {
+    this._cancelTimeout$.next();
+  }
+
+  @HostListener('mouseleave')
+  onMouseleave(): void {
+    this._startTimeout();
   }
 
   onAction(): void {
@@ -76,21 +100,11 @@ export class SnackBarComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    if (this.snackBarConfig.timeout) {
-      timer(this.snackBarConfig.timeout)
-        .pipe(takeUntil(this._destroy$))
-        .subscribe(() => {
-          if (this.snackBarConfig.timeoutCloseWithObservable) {
-            this.closeWithObservable();
-          } else {
-            this.close();
-          }
-        });
-    }
+    this._startTimeout();
   }
 
   ngOnDestroy(): void {
-    this._destroy$.next();
-    this._destroy$.complete();
+    this._cancelTimeout$.next();
+    this._cancelTimeout$.complete();
   }
 }

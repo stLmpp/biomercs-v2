@@ -54,14 +54,16 @@ export class ForgotPasswordComponent {
         })
       );
     }
-    request$.pipe(
-      finalize(() => {
-        this.loading$.next(false);
-        this.emailForm.enable();
-      }),
-      catchAndThrow(error => {
-        this.snackBarService.open(error.message);
-      })
-    );
+    request$
+      .pipe(
+        finalize(() => {
+          this.loading$.next(false);
+          this.emailForm.enable();
+        }),
+        catchAndThrow(error => {
+          this.snackBarService.open(error.message);
+        })
+      )
+      .subscribe();
   }
 }

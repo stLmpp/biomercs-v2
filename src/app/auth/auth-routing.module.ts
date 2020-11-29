@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { LoginComponent } from './login/login.component';
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
-import { RouteParamEnum } from '../model/route-param.enum';
+import { RouteDataEnum, RouteParamEnum } from '../model/route-param.enum';
 import { SteamRegisterComponent } from './steam-register/steam-register.component';
 import { NotLoggedGuard } from './not-logged.guard';
 import { SteamRegisterGuard } from './steam-register/steam-register.guard';
@@ -19,9 +19,19 @@ const routes: Routes = [
     canActivate: [NotLoggedGuard],
   },
   {
-    path: `steam/:${RouteParamEnum.steamid}/register`,
-    component: SteamRegisterComponent,
+    path: `steam/:${RouteParamEnum.steamid}`,
     canActivate: [NotLoggedGuard, SteamRegisterGuard],
+    children: [
+      {
+        path: 'register',
+        component: SteamRegisterComponent,
+      },
+      {
+        path: 'confirm',
+        component: SteamRegisterComponent,
+        data: { [RouteDataEnum.confirm]: true },
+      },
+    ],
   },
 ];
 

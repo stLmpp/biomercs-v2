@@ -1,7 +1,7 @@
-import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { AuthService } from '../auth.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { RouteParamEnum } from '../../model/route-param.enum';
+import { RouteDataEnum, RouteParamEnum } from '../../model/route-param.enum';
 import { RouterQuery } from '@stlmpp/router';
 import { ControlBuilder, Validators } from '@stlmpp/control';
 import { BehaviorSubject, Observable } from 'rxjs';
@@ -20,7 +20,7 @@ interface SteamRegisterForm {
   styleUrls: ['./steam-register.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SteamRegisterComponent implements OnDestroy {
+export class SteamRegisterComponent implements OnDestroy, OnInit {
   constructor(
     private authService: AuthService,
     private activatedRoute: ActivatedRoute,
@@ -34,7 +34,7 @@ export class SteamRegisterComponent implements OnDestroy {
     return this.activatedRoute.snapshot.paramMap.get(RouteParamEnum.steamid)!;
   }
 
-  get token(): string {
+  get token(): [string, number?] {
     // This component has a guard for this token
     return this.authService.getSteamToken(this.steamid)!;
   }
@@ -64,7 +64,8 @@ export class SteamRegisterComponent implements OnDestroy {
       );
     } else {
       const { email } = this.form.value;
-      request$ = this.authService.registerSteam(this.steamid, email, this.token).pipe(
+      const [token] = this.token;
+      request$ = this.authService.registerSteam(this.steamid, email, token).pipe(
         tap(({ idUser }) => {
           this.emailSent$.next(true);
           this.form.get('code').setValidator(Validators.required);
@@ -80,6 +81,17 @@ export class SteamRegisterComponent implements OnDestroy {
         })
       )
       .subscribe();
+  }
+
+  ngOnInit(): void {
+    if (this.activatedRoute.getData<boolean>(RouteDataEnum.confirm)) {
+      this.emailSent$.next(true);
+      this.form.get('code').setValidator(Validators.required);
+      const emailControl = this.form.get('email');
+      emailControl.removeValidators(emailControl.validators);
+      const [, idUser] = this.token;
+      this.idUser = idUser!;
+    }
   }
 
   ngOnDestroy(): void {

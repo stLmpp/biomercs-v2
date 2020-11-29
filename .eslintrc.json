@@ -48,6 +48,7 @@
         "arrow-body-style": ["error", "as-needed"],
         "prefer-arrow-callback": ["error"],
         "prefer-arrow/prefer-arrow-functions": ["off"],
+        "no-shadow": ["off"],
         "@typescript-eslint/explicit-member-accessibility": ["off", { "accessibility": "explicit" }],
         "@typescript-eslint/no-non-null-assertion": "off",
         "@typescript-eslint/unified-signatures": "off",
@@ -99,6 +100,10 @@
             "modifiers": ["private"],
             "format": ["camelCase"],
             "leadingUnderscore": "allow"
+          },
+          {
+            "selector": "enumMember",
+            "format": ["camelCase", "PascalCase"]
           }
         ],
         "@typescript-eslint/member-ordering": [

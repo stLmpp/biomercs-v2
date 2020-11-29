@@ -55,8 +55,20 @@
 /***************************************************************************************************
  * Zone JS is required by default for Angular itself.
  */
-import 'zone.js/dist/zone'; // Included with Angular CLI.
+import 'zone.js/dist/zone';
+import { ActivatedRoute } from '@angular/router'; // Included with Angular CLI.
 
 /***************************************************************************************************
  * APPLICATION IMPORTS
  */
+
+declare module '@angular/router/router' {
+  export interface ActivatedRoute {
+    getData<T = any>(path: string): T | undefined;
+  }
+}
+
+// eslint-disable-next-line space-before-function-paren
+ActivatedRoute.prototype.getData = function (path) {
+  return this.snapshot.data[path];
+};

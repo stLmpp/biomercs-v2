@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Inject, OnInit } from '@angular/core';
 import { Control, ControlGroup, Validators } from '@stlmpp/control';
-import { AuthCredentialsDto } from '../../model/auth';
+import { AuthCredentialsDto, SteamLoggedEventErrorType } from '../../model/auth';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { AuthService } from '../auth.service';
 import { WINDOW } from '../../core/window.service';
@@ -12,6 +12,10 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { catchAndThrow } from '../../util/operators/catchError';
 import { SnackBarService } from '../../shared/components/snack-bar/snack-bar.service';
 import { User } from '../../model/user';
+import { ModalService } from '../../shared/components/modal/modal.service';
+import { LoginConfirmCodeModalComponent } from '../login-confirm-code-modal/login-confirm-code-modal.component';
+import { HttpStatusCode } from '../../model/http-code.enum';
+import { HttpError } from '../../model/http-error';
 
 @Component({
   selector: 'bio-login',
@@ -26,7 +30,8 @@ export class LoginComponent extends Destroyable implements OnInit {
     private dialogService: DialogService,
     private router: Router,
     private snackBarService: SnackBarService,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private modalService: ModalService
   ) {
     super();
   }
@@ -54,25 +59,35 @@ export class LoginComponent extends Destroyable implements OnInit {
           return this.authService.loginSteamSocket(uuid).pipe(
             takeUntil(this.destroy$),
             timeout(5 * 60 * 1000), // Timeout after 5 minutes
-            switchMap(({ token, error, steamid }) => {
+            switchMap(({ token, error, steamid, errorType, idUser }) => {
               let request$: Observable<boolean | User>;
               if (error) {
                 windowSteam?.close();
+                let content = 'Want to create an account?';
+                let btnYes = 'Create account';
+                if (errorType === SteamLoggedEventErrorType.userNotConfirmed) {
+                  content = 'Want to confirm it?';
+                  btnYes = 'Confirm';
+                }
                 request$ = this.dialogService
                   .confirm({
                     title: error,
-                    content: 'Want to create an accont?',
-                    btnYes: 'Create account',
+                    content,
+                    btnYes,
                     btnNo: 'Close',
                   })
                   .pipe(
                     tap(result => {
                       if (result) {
-                        if (steamid) {
-                          this.authService.addSteamToken(steamid, token);
+                        if (steamid && token) {
+                          this.authService.addSteamToken(steamid, token, idUser);
+                        }
+                        let path = 'register';
+                        if (errorType === SteamLoggedEventErrorType.userNotConfirmed) {
+                          path = 'confirm';
                         }
                         this.router
-                          .navigate(['../', 'steam', steamid, 'register'], { relativeTo: this.activatedRoute })
+                          .navigate(['../', 'steam', steamid, path], { relativeTo: this.activatedRoute })
                           .then();
                       } else {
                         this.router.navigate(['/']).then();
@@ -120,8 +135,14 @@ export class LoginComponent extends Destroyable implements OnInit {
           this.loadingLogin$.next(false);
           this.form.enable();
         }),
-        catchAndThrow(error => {
+        catchAndThrow((error: HttpError<number>) => {
           this.error$.next(error.message);
+          if (error.status === HttpStatusCode.PreconditionFailed) {
+            this.modalService.open<LoginConfirmCodeModalComponent, number>(LoginConfirmCodeModalComponent, {
+              data: error.extra,
+              disableClose: true,
+            });
+          }
         })
       )
       .subscribe(() => {

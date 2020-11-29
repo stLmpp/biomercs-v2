@@ -10,9 +10,6 @@ export class FormatErrorInterceptor implements HttpInterceptor {
     return next.handle(request).pipe(
       catchError(({ error }: HttpErrorResponse) => {
         error = { ...error };
-        if ((error as any).statusCode && !error.status) {
-          error.status = (error as any).statusCode;
-        }
         if (!error.message) {
           error.message = 'Internal error';
         }
