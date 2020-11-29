@@ -31,17 +31,22 @@ export class ForgotPasswordComponent {
 
   loading$ = new BehaviorSubject(false);
   emailSent$ = new BehaviorSubject(false);
+  confirmCodeError$ = new BehaviorSubject<string | null>(null);
 
   submit(): void {
     this.loading$.next(true);
     this.emailForm.disable();
     let request$: Observable<void | User>;
     if (this.emailSent$.value) {
+      this.confirmCodeError$.next(null);
       const { password, code } = this.emailForm.value;
       request$ = this.authService.changeForgottenPassword(code, password).pipe(
         tap(() => {
           this.router.navigate(['/']).then();
           this.snackBarService.open('Password changed successfully');
+        }),
+        catchAndThrow(err => {
+          this.confirmCodeError$.next(err.message);
         })
       );
     } else {

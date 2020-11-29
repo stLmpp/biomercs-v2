@@ -6,6 +6,7 @@ import { BehaviorSubject } from 'rxjs';
 import { AuthService } from '../auth.service';
 import { finalize, tap } from 'rxjs/operators';
 import { Router } from '@angular/router';
+import { catchAndThrow } from '../../util/operators/catchError';
 
 interface LoginConfirmationForm {
   code: number;
@@ -28,8 +29,13 @@ export class LoginConfirmCodeModalComponent {
 
   form = this.controlBuilder.group<LoginConfirmationForm>({ code: [null, [Validators.required]] });
   loading$ = new BehaviorSubject<boolean>(false);
+  error$ = new BehaviorSubject<string | null>(null);
 
   submit(): void {
+    if (this.form.invalid) {
+      return;
+    }
+    this.error$.next(null);
     this.loading$.next(true);
     this.form.disable();
     const { code } = this.form.value;
@@ -43,6 +49,9 @@ export class LoginConfirmCodeModalComponent {
         tap(() => {
           this.modalRef.close();
           this.router.navigate(['/']).then();
+        }),
+        catchAndThrow(err => {
+          this.error$.next(err.message);
         })
       )
       .subscribe();

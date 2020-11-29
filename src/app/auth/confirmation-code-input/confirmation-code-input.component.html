@@ -8,12 +8,13 @@
       [controlName]="$index"
       (blur)="onTouched$.next()"
       (focus)="focusManager.setActiveItem($index)"
+      (paste)="onPaste($event)"
       placeholder="0"
       confirmationCodeInput
-      (paste)="onPaste($event)"
     />
   </div>
   <div class="errors">
     <error *ngIf="array.invalid && isTouched">Invalid code</error>
+    <span class="error" *ngIf="codeError">{{ codeError }}</span>
   </div>
 </form>

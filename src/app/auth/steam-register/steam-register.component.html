@@ -10,8 +10,9 @@
         <p>Please confirm the code we sent to your e-mail</p>
         <bio-confirmation-code-input
           controlName="code"
-          (focusoutLastItem)="submitBtn.nativeElement.focus()"
+          (focusoutLastItem)="submit()"
           label="Confirmation code"
+          [codeError]="confirmCodeError$ | async"
         ></bio-confirmation-code-input>
       </ng-container>
 
@@ -27,7 +28,7 @@
       </ng-template>
     </card-content>
     <card-actions end>
-      <button bioButton primary type="submit" #submitBtn [disabled]="form.invalid" [loading]="state.loading">
+      <button bioButton primary type="submit" [disabled]="form.invalid" [loading]="state.loading">
         {{ state.emailSent ? 'Send confirmation code' : 'Register' }}
       </button>
     </card-actions>

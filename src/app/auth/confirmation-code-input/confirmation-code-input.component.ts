@@ -51,6 +51,7 @@ export class ConfirmationCodeInputComponent
 
   @Input() length = 6;
   @Input() label?: string;
+  @Input() codeError: string | null = null;
 
   focusManager!: FocusKeyManager<ConfirmationCodeInputDirective>;
 

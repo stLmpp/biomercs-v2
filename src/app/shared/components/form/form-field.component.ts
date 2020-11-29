@@ -73,9 +73,8 @@ export class FormFieldComponent implements AfterContentInit, OnChanges, OnDestro
   }
 
   ngOnChanges(changes: SimpleChangesCustom<FormFieldComponent>): void {
-    if ((changes.loading || changes.disabled) && this.inputDirective?.controlDirective) {
-      this.inputDirective.controlDirective.disabled =
-        !!changes.loading?.currentValue || !!changes.disabled?.currentValue;
+    if (changes.disabled && this.inputDirective?.controlDirective) {
+      this.inputDirective.controlDirective.disabled = !!changes.disabled.currentValue;
     }
   }
 

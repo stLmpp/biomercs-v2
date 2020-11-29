@@ -8,6 +8,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { finalize, tap } from 'rxjs/operators';
 import { AuthRegisterResponse } from '../../model/auth';
 import { User } from '../../model/user';
+import { catchAndThrow } from '../../util/operators/catchError';
 
 interface SteamRegisterForm {
   code: number;
@@ -46,20 +47,28 @@ export class SteamRegisterComponent implements OnDestroy, OnInit {
     email: ['', [Validators.required, Validators.email]],
   });
 
-  emailSent$ = new BehaviorSubject<boolean>(false);
-  loading$ = new BehaviorSubject<boolean>(false);
+  emailSent$ = new BehaviorSubject(false);
+  loading$ = new BehaviorSubject(false);
+  confirmCodeError$ = new BehaviorSubject<string | null>(null);
 
   idUser = 0;
 
   submit(): void {
+    if (this.form.invalid) {
+      return;
+    }
     this.loading$.next(true);
     this.form.disable();
     let request$: Observable<User | AuthRegisterResponse>;
     if (this.emailSent$.value) {
+      this.confirmCodeError$.next(null);
       const { code } = this.form.value;
       request$ = this.authService.confirmCode(this.idUser, code).pipe(
         tap(() => {
           this.router.navigate(['/']).then();
+        }),
+        catchAndThrow(err => {
+          this.confirmCodeError$.next(err.message);
         })
       );
     } else {
@@ -91,6 +100,9 @@ export class SteamRegisterComponent implements OnDestroy, OnInit {
       emailControl.removeValidators(emailControl.validators);
       const [, idUser] = this.token;
       this.idUser = idUser!;
+    }
+    if (this.activatedRoute.snapshot.queryParamMap.has(RouteParamEnum.email)) {
+      this.form.get('email').setValue(this.activatedRoute.snapshot.queryParamMap.get(RouteParamEnum.email));
     }
   }
 

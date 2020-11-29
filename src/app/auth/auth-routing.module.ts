@@ -6,6 +6,7 @@ import { RouteDataEnum, RouteParamEnum } from '../model/route-param.enum';
 import { SteamRegisterComponent } from './steam-register/steam-register.component';
 import { NotLoggedGuard } from './not-logged.guard';
 import { SteamRegisterGuard } from './steam-register/steam-register.guard';
+import { RegisterComponent } from './register/register.component';
 
 const routes: Routes = [
   {
@@ -16,6 +17,11 @@ const routes: Routes = [
   {
     path: 'forgot-password',
     component: ForgotPasswordComponent,
+    canActivate: [NotLoggedGuard],
+  },
+  {
+    path: 'register',
+    component: RegisterComponent,
     canActivate: [NotLoggedGuard],
   },
   {

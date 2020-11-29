@@ -17,6 +17,7 @@ import {
 import { SteamRegisterComponent } from './steam-register/steam-register.component';
 import { ModalModule } from '../shared/components/modal/modal.module';
 import { LoginConfirmCodeModalComponent } from './login-confirm-code-modal/login-confirm-code-modal.component';
+import { RegisterComponent } from './register/register.component';
 
 @NgModule({
   declarations: [
@@ -26,6 +27,7 @@ import { LoginConfirmCodeModalComponent } from './login-confirm-code-modal/login
     ConfirmationCodeInputDirective,
     SteamRegisterComponent,
     LoginConfirmCodeModalComponent,
+    RegisterComponent,
   ],
   imports: [
     CommonModule,

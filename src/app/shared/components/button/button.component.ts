@@ -16,14 +16,19 @@ export class ButtonComponent extends AbstractComponent {
   }
 
   private _loading = false;
+  private _tabindex = 0;
 
   get disabledClass(): boolean | null {
     return this.loading || this.disabled || null;
   }
 
+  @Input()
   @HostBinding('attr.tabindex')
   get tabindex(): number {
-    return this.disabledClass ? -1 : this.nativeElement.tabIndex || 0;
+    return this.disabledClass ? -1 : this._tabindex || 0;
+  }
+  set tabindex(tabindex: number) {
+    this._tabindex = tabindex ? +tabindex : 0;
   }
 
   @HostBinding('attr.disabled')
