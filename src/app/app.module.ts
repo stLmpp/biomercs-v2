@@ -14,6 +14,8 @@ import { StControlModule } from '@stlmpp/control';
 import { ModalModule } from './shared/components/modal/modal.module';
 import { SnackBarModule } from './shared/components/snack-bar/snack-bar.module';
 import { HeaderModule } from './header/header.module';
+import { NgProgressModule } from 'ngx-progressbar';
+import { NgProgressRouterModule } from 'ngx-progressbar/router';
 
 @NgModule({
   declarations: [AppComponent],
@@ -30,6 +32,8 @@ import { HeaderModule } from './header/header.module';
     ModalModule.forRoot(),
     SnackBarModule.forRoot(),
     HeaderModule,
+    NgProgressModule.withConfig({ color: '#00acff', spinner: false, debounceTime: 100 }),
+    NgProgressRouterModule,
   ],
   bootstrap: [AppComponent],
 })
