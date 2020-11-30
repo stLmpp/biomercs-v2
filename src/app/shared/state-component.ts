@@ -6,23 +6,21 @@ import { Destroyable } from './destroyable-component';
 
 @Directive()
 export abstract class StateComponent<T extends Record<string, any> = Record<string, any>> extends Destroyable {
-  protected constructor(initialState?: Partial<T>) {
+  protected constructor(initialState: T) {
     super();
-    if (initialState) {
-      this._state$.next(initialState);
-    }
+    this._state$ = new BehaviorSubject(initialState);
   }
 
-  private _state$ = new BehaviorSubject<Partial<T>>({});
+  private _state$: BehaviorSubject<T>;
 
-  updateState(partial: Partial<T> | ((state: Partial<T>) => Partial<T>)): void;
+  updateState(partial: Partial<T> | ((state: T) => T)): void;
   updateState<K extends keyof T>(key: K, value: T[K] | ((state: T[K] | undefined) => T[K])): void;
   updateState<K extends keyof T>(
-    key: K | Partial<T> | ((state: Partial<T>) => Partial<T>),
+    key: K | Partial<T> | ((state: T) => T),
     value?: T[K] | ((state: T[K] | undefined) => T[K])
   ): void {
     if (isFunction(key) || isObject(key)) {
-      const callback = isFunction(key) ? key : (state: Partial<T>) => ({ ...state, ...key });
+      const callback = isFunction(key) ? key : (state: T) => ({ ...state, ...key });
       this._state$.next(callback({ ...this._state$.value }));
     } else {
       const callback = isFunction(value) ? value : () => value;
@@ -32,8 +30,8 @@ export abstract class StateComponent<T extends Record<string, any> = Record<stri
   }
 
   selectState(): Observable<T>;
-  selectState<K extends keyof T>(key: K): Observable<T[K] | undefined>;
-  selectState<K extends keyof T>(key?: K): Observable<T[K] | undefined | T> {
+  selectState<K extends keyof T>(key: K): Observable<T[K]>;
+  selectState<K extends keyof T>(key?: K): Observable<T[K] | T> {
     let state$: Observable<any> = this._state$.asObservable();
     if (key) {
       state$ = state$.pipe(pluck(key));
@@ -53,7 +51,7 @@ export abstract class StateComponent<T extends Record<string, any> = Record<stri
     );
   }
 
-  getState<K extends keyof T>(key: K): T[K] | undefined {
+  getState<K extends keyof T>(key: K): T[K] {
     return this._state$.value[key];
   }
 }
