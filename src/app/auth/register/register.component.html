@@ -63,13 +63,13 @@
         </form-field>
       </ng-template>
     </card-content>
-    <card-actions end *ngLet="{ steam: loadingSteam$ | async, loading: loading$ | async } as state">
+    <card-actions end *ngLet="loading$ | async as state">
       <button
         bioButton
         primary
         type="button"
         (click)="registerSteam()"
-        [loading]="state.steam"
+        [loading]="state.loadingSteam"
         [disabled]="state.loading"
         *ngIf="!emailSent"
       >
@@ -79,7 +79,7 @@
         bioButton
         primary
         type="submit"
-        [disabled]="state.steam || form.invalid || form.pending"
+        [disabled]="state.loadingSteam || form.invalid || form.pending"
         [loading]="state.loading"
       >
         {{ emailSent ? 'Confirm code' : 'Register' }}

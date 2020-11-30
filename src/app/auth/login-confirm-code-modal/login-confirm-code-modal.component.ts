@@ -2,11 +2,11 @@ import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 import { ControlBuilder, Validators } from '@stlmpp/control';
 import { ModalRef } from '../../shared/components/modal/modal-ref';
 import { MODAL_DATA } from '../../shared/components/modal/modal.config';
-import { BehaviorSubject } from 'rxjs';
 import { AuthService } from '../auth.service';
 import { finalize, tap } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { catchAndThrow } from '../../util/operators/catchError';
+import { StateComponent } from '../../shared/state-component';
 
 interface LoginConfirmationForm {
   code: number;
@@ -18,32 +18,33 @@ interface LoginConfirmationForm {
   styleUrls: ['./login-confirm-code-modal.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class LoginConfirmCodeModalComponent {
+export class LoginConfirmCodeModalComponent extends StateComponent<{ loading: boolean; error: string | null }> {
   constructor(
     public modalRef: ModalRef<LoginConfirmCodeModalComponent, number>,
     private controlBuilder: ControlBuilder,
     @Inject(MODAL_DATA) private idUser: number,
     private authService: AuthService,
     private router: Router
-  ) {}
+  ) {
+    super({ loading: false, error: null });
+  }
 
   form = this.controlBuilder.group<LoginConfirmationForm>({ code: [null, [Validators.required]] });
-  loading$ = new BehaviorSubject<boolean>(false);
-  error$ = new BehaviorSubject<string | null>(null);
+  loading$ = this.selectState('loading');
+  error$ = this.selectState('error');
 
   submit(): void {
     if (this.form.invalid) {
       return;
     }
-    this.error$.next(null);
-    this.loading$.next(true);
+    this.updateState({ error: null, loading: true });
     this.form.disable();
     const { code } = this.form.value;
     this.authService
       .confirmCode(this.idUser, code)
       .pipe(
         finalize(() => {
-          this.loading$.next(false);
+          this.updateState('loading', false);
           this.form.enable();
         }),
         tap(() => {
@@ -51,7 +52,7 @@ export class LoginConfirmCodeModalComponent {
           this.router.navigate(['/']).then();
         }),
         catchAndThrow(err => {
-          this.error$.next(err.message);
+          this.updateState('error', err.message);
         })
       )
       .subscribe();

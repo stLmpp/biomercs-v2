@@ -1,8 +1,4 @@
-<form
-  [controlGroup]="form"
-  (groupSubmit)="submit()"
-  *ngIf="{ emailSent: emailSent$ | async, loading: loading$ | async } as state"
->
+<form [controlGroup]="form" (groupSubmit)="submit()" *ngIf="state$ | async as state">
   <card>
     <h3 cardTitle>Register Steam</h3>
     <card-content>

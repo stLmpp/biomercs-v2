@@ -32,18 +32,24 @@
       </label>
       <p *ngIf="error$ | async as error" class="text-danger">{{ error }}</p>
     </card-content>
-    <card-actions end *ngLet="{ steam: loadingLoginSteam$ | async, login: loadingLogin$ | async } as loading">
+    <card-actions end *ngLet="loading$ | async as loading">
       <button
         bioButton
         primary
         type="button"
         (click)="loginSteam()"
-        [loading]="loading.steam"
-        [disabled]="loading.login"
+        [loading]="loading.loadingSteam"
+        [disabled]="loading.loading"
       >
         Login Steam
       </button>
-      <button bioButton primary type="submit" [disabled]="form.invalid || loading.steam" [loading]="loading.login">
+      <button
+        bioButton
+        primary
+        type="submit"
+        [disabled]="form.invalid || loading.loadingSteam"
+        [loading]="loading.loading"
+      >
         Login
       </button>
     </card-actions>

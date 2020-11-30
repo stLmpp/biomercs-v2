@@ -42,7 +42,7 @@ export class SnackBarComponent implements OnInit, OnDestroy {
   onClose$ = new Subject<void>();
   onAction$ = new Subject<void>();
 
-  loading$ = new BehaviorSubject<boolean>(false);
+  loading$ = new BehaviorSubject(false);
 
   private _startTimeout(): void {
     if (this.snackBarConfig.timeout) {

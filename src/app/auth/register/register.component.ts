@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { AuthService } from '../auth.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { finalize, tap } from 'rxjs/operators';
@@ -9,6 +9,7 @@ import { User } from '../../model/user';
 import { catchAndThrow } from '../../util/operators/catchError';
 import { EmailExistsValidator } from '../../shared/validators/email-exists.validator';
 import { UsernameExistsValidator } from '../../shared/validators/username-exists.validator';
+import { StateComponent } from '../../shared/state-component';
 
 interface AuthRegisterForm extends AuthRegisterDto {
   confirmPassword: string;
@@ -21,7 +22,12 @@ interface AuthRegisterForm extends AuthRegisterDto {
   styleUrls: ['./register.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class RegisterComponent {
+export class RegisterComponent extends StateComponent<{
+  loadingSteam: boolean;
+  loading: boolean;
+  emailSent: boolean;
+  errorConfirmationCode: string | null;
+}> {
   constructor(
     private authService: AuthService,
     private activatedRoute: ActivatedRoute,
@@ -29,16 +35,18 @@ export class RegisterComponent {
     private router: Router,
     private emailExistsValidator: EmailExistsValidator,
     private usernameExistsValidator: UsernameExistsValidator
-  ) {}
+  ) {
+    super({ loading: false, errorConfirmationCode: null, emailSent: false, loadingSteam: false });
+  }
 
   private _idUser = 0;
 
-  loadingSteam$ = new BehaviorSubject(false);
-  loading$ = new BehaviorSubject(false);
+  loading$ = this.selectStateMulti(['loading', 'loadingSteam']);
+
   hidePassword = true;
   hideConfirmPassword = true;
-  emailSent$ = new BehaviorSubject(false);
-  errorConfirmationCode$ = new BehaviorSubject<string | null>(null);
+  emailSent$ = this.selectState('emailSent');
+  errorConfirmationCode$ = this.selectState('errorConfirmationCode');
 
   form = this.controlBuilder.group<AuthRegisterForm>({
     username: [null, [Validators.required, Validators.minLength(3), this.usernameExistsValidator]],
@@ -49,12 +57,12 @@ export class RegisterComponent {
   });
 
   registerSteam(): void {
-    this.loadingSteam$.next(true);
+    this.updateState('loadingSteam', true);
     this.authService
       .loginSteam(['../', 'steam'], this.activatedRoute, true, this.form.get('email').value)
       .pipe(
         finalize(() => {
-          this.loadingSteam$.next(false);
+          this.updateState('loadingSteam', false);
         })
       )
       .subscribe();
@@ -64,18 +72,18 @@ export class RegisterComponent {
     if (this.form.invalid) {
       return;
     }
-    this.loading$.next(true);
+    this.updateState('loading', true);
     this.form.disable();
     let request$: Observable<AuthRegisterResponse | User>;
-    if (this.emailSent$.value) {
-      this.errorConfirmationCode$.next(null);
+    if (this.getState('emailSent')) {
+      this.updateState('errorConfirmationCode', null);
       // Can't be here if code is null or undefined
       request$ = this.authService.confirmCode(this._idUser, this.form.get('code').value!).pipe(
         tap(() => {
           this.router.navigate(['/']).then();
         }),
         catchAndThrow(err => {
-          this.errorConfirmationCode$.next(err.message);
+          this.updateState('errorConfirmationCode', err.message);
         })
       );
     } else {
@@ -83,7 +91,7 @@ export class RegisterComponent {
       request$ = this.authService.register({ email, password, username }).pipe(
         tap(response => {
           this._idUser = response.idUser;
-          this.emailSent$.next(true);
+          this.updateState('emailSent', true);
           this.form.get('code').setValidator(Validators.required);
         })
       );
@@ -91,7 +99,7 @@ export class RegisterComponent {
     request$
       .pipe(
         finalize(() => {
-          this.loading$.next(false);
+          this.updateState('loading', false);
           this.form.enable();
         })
       )

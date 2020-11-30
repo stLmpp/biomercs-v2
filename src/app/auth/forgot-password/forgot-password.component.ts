@@ -1,12 +1,13 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { Control, ControlGroup, Validators } from '@stlmpp/control';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { AuthService } from '../auth.service';
 import { finalize, tap } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { catchAndThrow } from '../../util/operators/catchError';
 import { SnackBarService } from '../../shared/components/snack-bar/snack-bar.service';
 import { User } from '../../model/user';
+import { StateComponent } from '../../shared/state-component';
 
 interface ForgotPasswordForm {
   email: string;
@@ -20,8 +21,14 @@ interface ForgotPasswordForm {
   styleUrls: ['./forgot-password.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ForgotPasswordComponent {
-  constructor(private authService: AuthService, private router: Router, private snackBarService: SnackBarService) {}
+export class ForgotPasswordComponent extends StateComponent<{
+  loading: boolean;
+  emailSent: boolean;
+  confirmCodeError: null | string;
+}> {
+  constructor(private authService: AuthService, private router: Router, private snackBarService: SnackBarService) {
+    super({ loading: false, emailSent: false, confirmCodeError: null });
+  }
 
   emailForm = new ControlGroup<ForgotPasswordForm>({
     email: new Control('', [Validators.required, Validators.email]),
@@ -29,16 +36,15 @@ export class ForgotPasswordComponent {
     code: new Control(),
   });
 
-  loading$ = new BehaviorSubject(false);
-  emailSent$ = new BehaviorSubject(false);
-  confirmCodeError$ = new BehaviorSubject<string | null>(null);
+  state$ = this.selectStateMulti(['loading', 'emailSent']);
+  confirmCodeError$ = this.selectState('confirmCodeError');
 
   submit(): void {
-    this.loading$.next(true);
+    this.updateState('loading', true);
     this.emailForm.disable();
     let request$: Observable<void | User>;
-    if (this.emailSent$.value) {
-      this.confirmCodeError$.next(null);
+    if (this.getState('emailSent')) {
+      this.updateState('confirmCodeError', null);
       const { password, code } = this.emailForm.value;
       request$ = this.authService.changeForgottenPassword(code, password).pipe(
         tap(() => {
@@ -46,7 +52,7 @@ export class ForgotPasswordComponent {
           this.snackBarService.open('Password changed successfully');
         }),
         catchAndThrow(err => {
-          this.confirmCodeError$.next(err.message);
+          this.updateState('confirmCodeError', err.message);
         })
       );
     } else {
@@ -55,14 +61,14 @@ export class ForgotPasswordComponent {
         tap(() => {
           this.emailForm.get('password').setValidator(Validators.required);
           this.emailForm.get('code').setValidator(Validators.required);
-          this.emailSent$.next(true);
+          this.updateState('emailSent', true);
         })
       );
     }
     request$
       .pipe(
         finalize(() => {
-          this.loading$.next(false);
+          this.updateState('loading', false);
           this.emailForm.enable();
         }),
         catchAndThrow(error => {

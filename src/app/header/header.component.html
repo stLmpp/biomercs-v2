@@ -7,7 +7,7 @@
         {{ user.username }}
       </button>
       <bio-menu #menu>
-        <a bioButton menuItem [routerLink]="['/user', user.id, 'profile']">Profile</a>
+        <a bioButton menuItem [routerLink]="pathToProfile$ | async">Profile</a>
         <a *ngIf="user.admin" bioButton menuItem routerLink="/admin">Admin</a>
         <a bioButton menuItem routerLink="/auth/login" (click)="logout()">Logout</a>
       </bio-menu>

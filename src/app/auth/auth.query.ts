@@ -3,6 +3,7 @@ import { Query } from '@stlmpp/store';
 import { AuthStore } from './auth.store';
 import { Auth } from '../model/auth';
 import { map } from 'rxjs/operators';
+import { User } from '../model/user';
 
 @Injectable({ providedIn: 'root' })
 export class AuthQuery extends Query<Auth> {
@@ -14,15 +15,19 @@ export class AuthQuery extends Query<Auth> {
   user$ = this.select('user');
 
   getIsLogged(): boolean {
-    const user = this.getState().user;
+    const user = this.getUser();
     return !!user?.id && !!user.token;
   }
 
   getToken(): string {
-    return this.getState().user?.token ?? '';
+    return this.getUser()?.token ?? '';
   }
 
   getIsAdmin(): boolean {
-    return !!this.getState().user?.admin;
+    return !!this.getUser()?.admin;
+  }
+
+  getUser(): User | null {
+    return this.getState().user;
   }
 }

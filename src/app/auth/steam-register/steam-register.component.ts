@@ -4,11 +4,12 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { RouteDataEnum, RouteParamEnum } from '../../model/route-param.enum';
 import { RouterQuery } from '@stlmpp/router';
 import { ControlBuilder, Validators } from '@stlmpp/control';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { finalize, tap } from 'rxjs/operators';
 import { AuthRegisterResponse } from '../../model/auth';
 import { User } from '../../model/user';
 import { catchAndThrow } from '../../util/operators/catchError';
+import { StateComponent } from '../../shared/state-component';
 
 interface SteamRegisterForm {
   code: number;
@@ -21,14 +22,22 @@ interface SteamRegisterForm {
   styleUrls: ['./steam-register.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SteamRegisterComponent implements OnDestroy, OnInit {
+export class SteamRegisterComponent
+  extends StateComponent<{
+    loading: boolean;
+    emailSent: boolean;
+    confirmCodeError: string | null;
+  }>
+  implements OnDestroy, OnInit {
   constructor(
     private authService: AuthService,
     private activatedRoute: ActivatedRoute,
     private routerQuery: RouterQuery,
     private controlBuilder: ControlBuilder,
     private router: Router
-  ) {}
+  ) {
+    super({ emailSent: false, loading: false, confirmCodeError: null });
+  }
 
   get steamid(): string {
     // This component is only accessible when there's a steamid in the route
@@ -47,9 +56,9 @@ export class SteamRegisterComponent implements OnDestroy, OnInit {
     email: ['', [Validators.required, Validators.email]],
   });
 
-  emailSent$ = new BehaviorSubject(false);
-  loading$ = new BehaviorSubject(false);
-  confirmCodeError$ = new BehaviorSubject<string | null>(null);
+  state$ = this.selectStateMulti(['emailSent', 'loading']);
+
+  confirmCodeError$ = this.selectState('confirmCodeError');
 
   idUser = 0;
 
@@ -57,18 +66,18 @@ export class SteamRegisterComponent implements OnDestroy, OnInit {
     if (this.form.invalid) {
       return;
     }
-    this.loading$.next(true);
+    this.updateState('loading', true);
     this.form.disable();
     let request$: Observable<User | AuthRegisterResponse>;
-    if (this.emailSent$.value) {
-      this.confirmCodeError$.next(null);
+    if (this.getState('emailSent')) {
+      this.updateState('confirmCodeError', null);
       const { code } = this.form.value;
       request$ = this.authService.confirmCode(this.idUser, code).pipe(
         tap(() => {
           this.router.navigate(['/']).then();
         }),
         catchAndThrow(err => {
-          this.confirmCodeError$.next(err.message);
+          this.updateState('confirmCodeError', err.message);
         })
       );
     } else {
@@ -76,7 +85,7 @@ export class SteamRegisterComponent implements OnDestroy, OnInit {
       const [token] = this.token;
       request$ = this.authService.registerSteam(this.steamid, email, token).pipe(
         tap(({ idUser }) => {
-          this.emailSent$.next(true);
+          this.updateState('emailSent', true);
           this.form.get('code').setValidator(Validators.required);
           this.idUser = idUser;
         })
@@ -86,7 +95,7 @@ export class SteamRegisterComponent implements OnDestroy, OnInit {
       .pipe(
         finalize(() => {
           this.form.enable();
-          this.loading$.next(false);
+          this.updateState('loading', false);
         })
       )
       .subscribe();
@@ -94,7 +103,7 @@ export class SteamRegisterComponent implements OnDestroy, OnInit {
 
   ngOnInit(): void {
     if (this.activatedRoute.getData<boolean>(RouteDataEnum.confirm)) {
-      this.emailSent$.next(true);
+      this.updateState('emailSent', true);
       this.form.get('code').setValidator(Validators.required);
       const emailControl = this.form.get('email');
       emailControl.removeValidators(emailControl.validators);
@@ -111,5 +120,6 @@ export class SteamRegisterComponent implements OnDestroy, OnInit {
     if (steamid) {
       this.authService.removeSteamToken(steamid);
     }
+    super.ngOnDestroy();
   }
 }

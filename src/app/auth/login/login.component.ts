@@ -1,11 +1,9 @@
 import { ChangeDetectionStrategy, Component, Inject, OnInit } from '@angular/core';
 import { Control, ControlGroup, Validators } from '@stlmpp/control';
 import { AuthCredentialsDto } from '../../model/auth';
-import { BehaviorSubject } from 'rxjs';
 import { AuthService } from '../auth.service';
 import { WINDOW } from '../../core/window.service';
 import { filter, finalize, takeUntil, withLatestFrom } from 'rxjs/operators';
-import { Destroyable } from '../../shared/destroyable-component';
 import { DialogService } from '../../shared/components/modal/dialog/dialog.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { catchAndThrow } from '../../util/operators/catchError';
@@ -14,6 +12,7 @@ import { ModalService } from '../../shared/components/modal/modal.service';
 import { LoginConfirmCodeModalComponent } from '../login-confirm-code-modal/login-confirm-code-modal.component';
 import { HttpStatusCode } from '../../model/http-code.enum';
 import { HttpError } from '../../model/http-error';
+import { StateComponent } from '../../shared/state-component';
 
 @Component({
   selector: 'bio-login',
@@ -21,7 +20,9 @@ import { HttpError } from '../../model/http-error';
   styleUrls: ['./login.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class LoginComponent extends Destroyable implements OnInit {
+export class LoginComponent
+  extends StateComponent<{ loadingSteam: boolean; loading: boolean; error: string | null }>
+  implements OnInit {
   constructor(
     private authService: AuthService,
     @Inject(WINDOW) private window: Window,
@@ -31,13 +32,12 @@ export class LoginComponent extends Destroyable implements OnInit {
     private activatedRoute: ActivatedRoute,
     private modalService: ModalService
   ) {
-    super();
+    super({ error: null, loading: false, loadingSteam: false });
   }
 
-  loadingLoginSteam$ = new BehaviorSubject<boolean>(false);
-  loadingLogin$ = new BehaviorSubject<boolean>(false);
+  loading$ = this.selectStateMulti(['loading', 'loadingSteam']);
   typePassword = 'password';
-  error$ = new BehaviorSubject<string | null>(null);
+  error$ = this.selectState('error');
 
   form = new ControlGroup<AuthCredentialsDto>({
     rememberMe: new Control(true),
@@ -46,30 +46,30 @@ export class LoginComponent extends Destroyable implements OnInit {
   });
 
   loginSteam(): void {
-    this.loadingLoginSteam$.next(true);
+    this.updateState('loadingSteam', true);
     this.authService
       .loginSteam(['../', 'steam'], this.activatedRoute)
       .pipe(
         finalize(() => {
-          this.loadingLoginSteam$.next(false);
+          this.updateState('loadingSteam', false);
         })
       )
       .subscribe();
   }
 
   login(): void {
-    this.loadingLogin$.next(true);
+    this.updateState('loading', true);
     const credentials = this.form.value;
     this.form.disable();
     this.authService
       .login(credentials)
       .pipe(
         finalize(() => {
-          this.loadingLogin$.next(false);
+          this.updateState('loading', false);
           this.form.enable();
         }),
         catchAndThrow((error: HttpError<number>) => {
-          this.error$.next(error.message);
+          this.updateState('error', error.message);
           if (error.status === HttpStatusCode.PreconditionFailed) {
             this.modalService.open<LoginConfirmCodeModalComponent, number>(LoginConfirmCodeModalComponent, {
               data: error.extra,
@@ -92,7 +92,7 @@ export class LoginComponent extends Destroyable implements OnInit {
         filter(([_, error]) => !!error)
       )
       .subscribe(() => {
-        this.error$.next(null);
+        this.updateState('error', null);
       });
   }
 }
