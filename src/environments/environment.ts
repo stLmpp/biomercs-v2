@@ -6,6 +6,7 @@ export const environment = {
   production: false,
   api: 'http://localhost:3000/api',
   dev: true,
+  cacheTimeout: 450_000,
 };
 
 /*

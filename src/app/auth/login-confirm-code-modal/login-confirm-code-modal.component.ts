@@ -6,10 +6,10 @@ import { AuthService } from '../auth.service';
 import { finalize, tap } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { catchAndThrow } from '../../util/operators/catchError';
-import { StateComponent } from '../../shared/state-component';
+import { StateComponent } from '../../shared/components/common/state-component';
 
 interface LoginConfirmationForm {
-  code: number;
+  code: number | null;
 }
 
 @Component({
@@ -40,8 +40,9 @@ export class LoginConfirmCodeModalComponent extends StateComponent<{ loading: bo
     this.updateState({ error: null, loading: true });
     this.form.disable();
     const { code } = this.form.value;
+    // Code has to be set at this point because of validations
     this.authService
-      .confirmCode(this.idUser, code)
+      .confirmCode(this.idUser, code!)
       .pipe(
         finalize(() => {
           this.updateState('loading', false);

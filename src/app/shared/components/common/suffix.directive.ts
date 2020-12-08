@@ -4,4 +4,4 @@ import { Directive } from '@angular/core';
   selector: '[suffix]',
   host: { class: 'suffix', '[tabindex]': '-1' },
 })
-export class FormFieldSuffixDirective {}
+export class SuffixDirective {}

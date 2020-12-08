@@ -38,6 +38,10 @@ label {
   @include form-focus();
 }
 
+textarea.input {
+  font-size: 0.85rem;
+}
+
 input.no-arrows {
   &::-webkit-outer-spin-button,
   &::-webkit-inner-spin-button {

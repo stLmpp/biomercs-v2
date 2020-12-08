@@ -4,7 +4,7 @@ import { ModalRef } from '../modal-ref';
 import { BehaviorSubject, isObservable, Observable } from 'rxjs';
 import { MODAL_DATA } from '../modal.config';
 import { take, takeUntil } from 'rxjs/operators';
-import { Destroyable } from '../../../destroyable-component';
+import { Destroyable } from '../../common/destroyable-component';
 import { catchAndThrow } from '../../../../util/operators/catchError';
 import { isFunction } from '@stlmpp/utils';
 

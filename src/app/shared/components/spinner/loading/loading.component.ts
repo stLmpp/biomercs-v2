@@ -18,7 +18,7 @@ export class LoadingComponent {
     this._noBox = coerceBooleanProperty(noBox);
   }
 
-  @Input() show = false;
+  @Input() show: boolean | null = false;
 
   static ngAcceptInputType_noBox: BooleanInput;
 }

@@ -3,7 +3,7 @@ import { MenuComponent } from './menu.component';
 import { Overlay } from '@angular/cdk/overlay';
 import { cdkOverlayTransparentBackdrop, overlayPositions } from '../../../util/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
-import { Destroyable } from '../../destroyable-component';
+import { Destroyable } from '../common/destroyable-component';
 import { takeUntil } from 'rxjs/operators';
 import { DOCUMENT } from '@angular/common';
 

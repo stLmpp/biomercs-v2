@@ -8,8 +8,8 @@ import { FormFieldComponent } from './form-field.component';
 import { FormFieldErrorComponent } from './error.component';
 import { FormFieldHintDirective } from './hint.directive';
 import { NgLetModule } from '../../let/ng-let.module';
-import { FormFieldPrefixDirective } from './prefix.directive';
-import { FormFieldSuffixDirective } from './suffix.directive';
+import { TextareaDirective } from './textarea.directive';
+import { BioCommonModule } from '../common/bio-common.module';
 
 @NgModule({
   declarations: [
@@ -19,8 +19,7 @@ import { FormFieldSuffixDirective } from './suffix.directive';
     FormFieldErrorsDirective,
     FormFieldErrorComponent,
     FormFieldHintDirective,
-    FormFieldPrefixDirective,
-    FormFieldSuffixDirective,
+    TextareaDirective,
   ],
   exports: [
     InputDirective,
@@ -29,9 +28,9 @@ import { FormFieldSuffixDirective } from './suffix.directive';
     FormFieldErrorsDirective,
     FormFieldErrorComponent,
     FormFieldHintDirective,
-    FormFieldPrefixDirective,
-    FormFieldSuffixDirective,
+    TextareaDirective,
+    BioCommonModule,
   ],
-  imports: [CommonModule, SpinnerModule, NgLetModule],
+  imports: [CommonModule, SpinnerModule, NgLetModule, BioCommonModule],
 })
 export class FormModule {}

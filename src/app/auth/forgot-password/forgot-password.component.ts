@@ -7,11 +7,11 @@ import { Router } from '@angular/router';
 import { catchAndThrow } from '../../util/operators/catchError';
 import { SnackBarService } from '../../shared/components/snack-bar/snack-bar.service';
 import { User } from '../../model/user';
-import { StateComponent } from '../../shared/state-component';
+import { StateComponent } from '../../shared/components/common/state-component';
 
 interface ForgotPasswordForm {
   email: string;
-  code: number;
+  code: number | null;
   password: string;
 }
 
@@ -32,8 +32,8 @@ export class ForgotPasswordComponent extends StateComponent<{
 
   emailForm = new ControlGroup<ForgotPasswordForm>({
     email: new Control('', [Validators.required, Validators.email]),
-    password: new Control(),
-    code: new Control(),
+    password: new Control(''),
+    code: new Control(null),
   });
 
   state$ = this.selectStateMulti(['loading', 'emailSent']);
@@ -46,7 +46,8 @@ export class ForgotPasswordComponent extends StateComponent<{
     if (this.getState('emailSent')) {
       this.updateState('confirmCodeError', null);
       const { password, code } = this.emailForm.value;
-      request$ = this.authService.changeForgottenPassword(code, password).pipe(
+      // Code has to be defined at this point, because of the validations
+      request$ = this.authService.changeForgottenPassword(code!, password).pipe(
         tap(() => {
           this.router.navigate(['/']).then();
           this.snackBarService.open('Password changed successfully');

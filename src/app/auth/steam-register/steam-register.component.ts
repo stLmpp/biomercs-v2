@@ -9,10 +9,10 @@ import { finalize, tap } from 'rxjs/operators';
 import { AuthRegisterResponse } from '../../model/auth';
 import { User } from '../../model/user';
 import { catchAndThrow } from '../../util/operators/catchError';
-import { StateComponent } from '../../shared/state-component';
+import { StateComponent } from '../../shared/components/common/state-component';
 
 interface SteamRegisterForm {
-  code: number;
+  code: number | null;
   email: string;
 }
 
@@ -49,10 +49,8 @@ export class SteamRegisterComponent
     return this.authService.getSteamToken(this.steamid)!;
   }
 
-  steamid$ = this.routerQuery.selectParams(RouteParamEnum.steamid);
-
   form = this.controlBuilder.group<SteamRegisterForm>({
-    code: [],
+    code: [null],
     email: ['', [Validators.required, Validators.email]],
   });
 
@@ -72,7 +70,8 @@ export class SteamRegisterComponent
     if (this.getState('emailSent')) {
       this.updateState('confirmCodeError', null);
       const { code } = this.form.value;
-      request$ = this.authService.confirmCode(this.idUser, code).pipe(
+      // Code should be set here because of validations
+      request$ = this.authService.confirmCode(this.idUser, code!).pipe(
         tap(() => {
           this.router.navigate(['/']).then();
         }),
@@ -111,7 +110,8 @@ export class SteamRegisterComponent
       this.idUser = idUser!;
     }
     if (this.activatedRoute.snapshot.queryParamMap.has(RouteParamEnum.email)) {
-      this.form.get('email').setValue(this.activatedRoute.snapshot.queryParamMap.get(RouteParamEnum.email));
+      // Well, just did the validation up here, sooooo
+      this.form.get('email').setValue(this.activatedRoute.snapshot.queryParamMap.get(RouteParamEnum.email)!);
     }
   }
 

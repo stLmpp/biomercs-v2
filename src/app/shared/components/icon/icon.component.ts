@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/
 import { AbstractComponent } from '../core/abstract-component';
 
 @Component({
-  selector: 'icon',
+  selector: 'icon:not([flag])',
   templateUrl: './icon.component.html',
   styleUrls: ['./icon.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

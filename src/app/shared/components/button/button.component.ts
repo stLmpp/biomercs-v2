@@ -47,7 +47,7 @@ export class ButtonComponent extends AbstractComponent {
 
   @Input() icon: BooleanInput;
 
-  @HostBinding('class.icon')
+  @HostBinding('class.button-icon')
   get isIcon(): boolean {
     return coerceBooleanProperty(this.icon);
   }

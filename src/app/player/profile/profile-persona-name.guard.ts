@@ -16,7 +16,6 @@ export class ProfilePersonaNameGuard implements CanActivate {
     state: RouterStateSnapshot
   ): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
     const personaName = route.paramMap.get(RouteParamEnum.personaName)!;
-
     return this.playerService
       .getIdByPersonaName(personaName)
       .pipe(map(idPlayer => this.router.createUrlTree(['/player', idPlayer])));

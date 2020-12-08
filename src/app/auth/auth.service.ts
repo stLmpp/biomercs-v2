@@ -9,7 +9,7 @@ import {
   SteamLoggedEventErrorType,
 } from '../model/auth';
 import { User } from '../model/user';
-import { filter, finalize, switchMap, tap, timeout } from 'rxjs/operators';
+import { filter, finalize, switchMap, takeUntil, tap, timeout } from 'rxjs/operators';
 import { AuthStore } from './auth.store';
 import { catchAndThrow } from '../util/operators/catchError';
 import { SocketIOService } from '../shared/socket-io/socket-io.service';
@@ -90,6 +90,7 @@ export class AuthService {
   loginSteam(
     steamAuthRelativePath: string[],
     relativeTo: ActivatedRoute,
+    destroy$: Observable<any>,
     skipConfirmCreate?: boolean,
     email?: string | null
   ): Observable<boolean | User> {
@@ -98,6 +99,7 @@ export class AuthService {
       switchMap(url => {
         const windowSteam = this.window.open(url, 'Login Steam', 'width=500');
         return this.loginSteamSocket(uuid).pipe(
+          takeUntil(destroy$),
           timeout(5 * 60 * 1000), // Timeout after 5 minutes
           switchMap(({ token, error, steamid, errorType, idUser }) => {
             let request$: Observable<boolean | User>;

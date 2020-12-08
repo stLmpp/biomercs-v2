@@ -57,7 +57,7 @@ export class ConfirmationCodeInputComponent
 
   form = this.controlBuilder.group<{ array: string[] }>({
     array: this.controlBuilder.array<string>(
-      Array.from({ length: this.length }).map(() => [null, [Validators.required, Validators.maxLength(1)]])
+      Array.from({ length: this.length }).map(() => ['', [Validators.required, Validators.maxLength(1)]])
     ),
   });
 
@@ -81,7 +81,7 @@ export class ConfirmationCodeInputComponent
           )
           .subscribe(value => {
             if (!/^[0-9]$/.test(value!)) {
-              input.setValue(null, { emitChange: false });
+              input.setValue('', { emitChange: false });
             } else if (i === len - 1) {
               this.focusoutLastItem.emit();
             } else {

@@ -14,6 +14,8 @@ import { CommonModule } from '@angular/common';
 import { AuthService } from '../auth/auth.service';
 import { AuthInterceptor } from '../auth/auth.interceptor';
 import { AuthErrorInterceptor } from '../auth/auth-error.interceptor';
+import { AbstractRegionService } from '../region/region-service.token';
+import { RegionService } from '../region/region.service';
 
 const withInterceptors = (...interceptors: any[]): Provider[] =>
   interceptors.map(useClass => ({
@@ -51,6 +53,7 @@ export class CoreModule {
           deps: [AuthService],
           multi: true,
         },
+        { provide: AbstractRegionService, useClass: RegionService },
       ],
     };
   }

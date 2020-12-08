@@ -15,3 +15,10 @@ export interface Player extends BaseModel {
   idRegion: number;
   region?: Region;
 }
+
+export interface PlayerUpdateDto {
+  personaName?: string;
+  title?: string;
+  aboutMe?: string;
+  idRegion?: number;
+}

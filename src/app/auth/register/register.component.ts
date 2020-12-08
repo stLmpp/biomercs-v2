@@ -9,11 +9,11 @@ import { User } from '../../model/user';
 import { catchAndThrow } from '../../util/operators/catchError';
 import { EmailExistsValidator } from '../../shared/validators/email-exists.validator';
 import { UsernameExistsValidator } from '../../shared/validators/username-exists.validator';
-import { StateComponent } from '../../shared/state-component';
+import { StateComponent } from '../../shared/components/common/state-component';
 
 interface AuthRegisterForm extends AuthRegisterDto {
   confirmPassword: string;
-  code: number;
+  code: number | null;
 }
 
 @Component({
@@ -49,17 +49,17 @@ export class RegisterComponent extends StateComponent<{
   errorConfirmationCode$ = this.selectState('errorConfirmationCode');
 
   form = this.controlBuilder.group<AuthRegisterForm>({
-    username: [null, [Validators.required, Validators.minLength(3), this.usernameExistsValidator]],
-    password: [null, [Validators.required, Validators.minLength(6), Validators.sibblingEquals('confirmPassword')]],
-    email: [null, [Validators.required, Validators.email, this.emailExistsValidator]],
-    confirmPassword: [null, [Validators.required, Validators.minLength(6), Validators.sibblingEquals('password')]],
-    code: [],
+    username: ['', [Validators.required, Validators.minLength(3), this.usernameExistsValidator]],
+    password: ['', [Validators.required, Validators.minLength(6), Validators.sibblingEquals('confirmPassword')]],
+    email: ['', [Validators.required, Validators.email, this.emailExistsValidator]],
+    confirmPassword: ['', [Validators.required, Validators.minLength(6), Validators.sibblingEquals('password')]],
+    code: [null],
   });
 
   registerSteam(): void {
     this.updateState('loadingSteam', true);
     this.authService
-      .loginSteam(['../', 'steam'], this.activatedRoute, true, this.form.get('email').value)
+      .loginSteam(['../', 'steam'], this.activatedRoute, this.destroy$, true, this.form.get('email').value)
       .pipe(
         finalize(() => {
           this.updateState('loadingSteam', false);

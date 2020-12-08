@@ -4,6 +4,9 @@ import { AuthStore } from './auth.store';
 import { Auth } from '../model/auth';
 import { map } from 'rxjs/operators';
 import { User } from '../model/user';
+import { Player } from '../model/player';
+import { Observable } from 'rxjs';
+import { isNumber } from '@stlmpp/utils';
 
 @Injectable({ providedIn: 'root' })
 export class AuthQuery extends Query<Auth> {
@@ -13,11 +16,6 @@ export class AuthQuery extends Query<Auth> {
 
   isLogged$ = this.select('user').pipe(map(user => !!user?.id && !!user.token));
   user$ = this.select('user');
-
-  getIsLogged(): boolean {
-    const user = this.getUser();
-    return !!user?.id && !!user.token;
-  }
 
   getToken(): string {
     return this.getUser()?.token ?? '';
@@ -29,5 +27,10 @@ export class AuthQuery extends Query<Auth> {
 
   getUser(): User | null {
     return this.getState().user;
+  }
+
+  selectIsSameAsLogged(value: number | Player): Observable<boolean> {
+    const idPlayer = isNumber(value) ? value : value.id;
+    return this.user$.pipe(map(user => user?.player?.id === idPlayer));
   }
 }

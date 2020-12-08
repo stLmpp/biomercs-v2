@@ -12,7 +12,7 @@ import { ModalService } from '../../shared/components/modal/modal.service';
 import { LoginConfirmCodeModalComponent } from '../login-confirm-code-modal/login-confirm-code-modal.component';
 import { HttpStatusCode } from '../../model/http-code.enum';
 import { HttpError } from '../../model/http-error';
-import { StateComponent } from '../../shared/state-component';
+import { StateComponent } from '../../shared/components/common/state-component';
 
 @Component({
   selector: 'bio-login',
@@ -48,7 +48,7 @@ export class LoginComponent
   loginSteam(): void {
     this.updateState('loadingSteam', true);
     this.authService
-      .loginSteam(['../', 'steam'], this.activatedRoute)
+      .loginSteam(['../', 'steam'], this.activatedRoute, this.destroy$)
       .pipe(
         finalize(() => {
           this.updateState('loadingSteam', false);

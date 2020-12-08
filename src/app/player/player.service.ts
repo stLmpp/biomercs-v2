@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Player } from '../model/player';
+import { Player, PlayerUpdateDto } from '../model/player';
 import { PlayerStore } from './player.store';
 import { tap } from 'rxjs/operators';
 
@@ -25,5 +25,13 @@ export class PlayerService {
 
   getIdByIdUser(idUser: number): Observable<number> {
     return this.http.get<number>(`${this.endPoint}/user/${idUser}/id`);
+  }
+
+  update(idPlayer: number, dto: PlayerUpdateDto): Observable<Player> {
+    return this.http.patch<Player>(`${this.endPoint}/${idPlayer}`, dto).pipe(
+      tap(player => {
+        this.playerStore.upsert(idPlayer, player);
+      })
+    );
   }
 }

@@ -13,17 +13,17 @@
         color: $color;
       }
     }
-    &.icon {
+    &.button-icon {
       icon {
         color: $background-color;
       }
     }
     &.disabled:not(.loading) {
       $disabled-color: get-disabled-color($background-color);
-      &:not(.icon) {
+      &:not(.button-icon) {
         background-color: $disabled-color;
       }
-      &.icon {
+      &.button-icon {
         icon {
           color: $disabled-color;
         }
@@ -32,11 +32,11 @@
     &:not(.disabled) {
       &:hover {
         $hover-color: get-color($type, 50);
-        &:not(.icon),
+        &:not(.button-icon),
         &.fab {
           background-color: $hover-color;
         }
-        &.icon {
+        &.button-icon {
           icon {
             color: $hover-color;
           }
@@ -98,13 +98,13 @@
     line-height: 2.25rem;
     font-size: 1.25rem;
   }
-  &.icon,
+  &.button-icon,
   &.fab {
     padding: 0.25rem;
     border-radius: 50%;
     line-height: 1;
   }
-  &.icon {
+  &.button-icon {
     background-color: transparent;
   }
   > spinner {
