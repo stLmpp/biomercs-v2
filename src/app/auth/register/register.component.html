@@ -44,6 +44,7 @@
             <error *error="'minLength'; let error">Password must have at least {{ error.required }} characters</error>
           </errors>
         </form-field>
+        <bio-password-strong [password]="password$ | async"></bio-password-strong>
         <form-field label="Confirm password">
           <input
             bioInput

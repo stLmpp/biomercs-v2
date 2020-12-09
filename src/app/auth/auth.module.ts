@@ -18,6 +18,7 @@ import { SteamRegisterComponent } from './steam-register/steam-register.componen
 import { ModalModule } from '../shared/components/modal/modal.module';
 import { LoginConfirmCodeModalComponent } from './login-confirm-code-modal/login-confirm-code-modal.component';
 import { RegisterComponent } from './register/register.component';
+import { PasswordStrongComponent } from './password-strong/password-strong.component';
 
 @NgModule({
   declarations: [
@@ -28,6 +29,7 @@ import { RegisterComponent } from './register/register.component';
     SteamRegisterComponent,
     LoginConfirmCodeModalComponent,
     RegisterComponent,
+    PasswordStrongComponent,
   ],
   imports: [
     CommonModule,

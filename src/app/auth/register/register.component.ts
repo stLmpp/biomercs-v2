@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { Observable } from 'rxjs';
 import { AuthService } from '../auth.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { finalize, tap } from 'rxjs/operators';
+import { debounceTime, finalize, tap } from 'rxjs/operators';
 import { AuthRegisterDto, AuthRegisterResponse } from '../../model/auth';
 import { ControlBuilder, Validators } from '@stlmpp/control';
 import { User } from '../../model/user';
@@ -55,6 +55,8 @@ export class RegisterComponent extends StateComponent<{
     confirmPassword: ['', [Validators.required, Validators.minLength(6), Validators.sibblingEquals('password')]],
     code: [null],
   });
+
+  password$ = this.form.get('password').value$.pipe(debounceTime(300));
 
   registerSteam(): void {
     this.updateState('loadingSteam', true);

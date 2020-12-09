@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { Control, ControlGroup, Validators } from '@stlmpp/control';
 import { Observable } from 'rxjs';
 import { AuthService } from '../auth.service';
-import { finalize, tap } from 'rxjs/operators';
+import { debounceTime, finalize, tap } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { catchAndThrow } from '../../util/operators/catchError';
 import { SnackBarService } from '../../shared/components/snack-bar/snack-bar.service';
@@ -38,6 +38,7 @@ export class ForgotPasswordComponent extends StateComponent<{
 
   state$ = this.selectStateMulti(['loading', 'emailSent']);
   confirmCodeError$ = this.selectState('confirmCodeError');
+  password$ = this.emailForm.get('password').value$.pipe(debounceTime(300));
 
   submit(): void {
     this.updateState('loading', true);
