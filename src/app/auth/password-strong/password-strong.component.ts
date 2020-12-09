@@ -31,7 +31,7 @@ export class PasswordStrongComponent {
   }
 
   @Input()
-  set password(password: string) {
+  set password(password: string | null | undefined) {
     this._validatePassword(password ?? '');
   }
 }
