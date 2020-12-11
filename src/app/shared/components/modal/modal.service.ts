@@ -15,6 +15,7 @@ import { coerceArray } from '@angular/cdk/coercion';
 import { ComponentPortal, TemplatePortal } from '@angular/cdk/portal';
 import { ModalComponent } from './modal.component';
 import { DOCUMENT } from '@angular/common';
+import { DynamicLoaderService, LazyFn } from '../../../core/dynamic-loader.service';
 
 @Injectable()
 export class ModalService implements OnDestroy {
@@ -22,7 +23,8 @@ export class ModalService implements OnDestroy {
     @Inject(MODAL_DEFAULT_CONFIG) private modalDefaultConfig: ModalConfig,
     private overlay: Overlay,
     private injector: Injector,
-    @Inject(DOCUMENT) private document: Document
+    @Inject(DOCUMENT) private document: Document,
+    private dynamicLoaderService: DynamicLoaderService
   ) {}
 
   private _modalMap = new Map<string, ModalRef>();
@@ -110,6 +112,17 @@ export class ModalService implements OnDestroy {
       this._modalMap.delete(config.id);
     });
     return modalRef;
+  }
+
+  async openLazy<T = any, D = any, R = any>(
+    componentFn: LazyFn,
+    _config?: Partial<ModalConfig & { module: LazyFn }>
+  ): Promise<ModalRef<T, D, R>> {
+    if (_config?.module) {
+      await this.dynamicLoaderService.loadModule(_config.module);
+    }
+    const component = await componentFn();
+    return this.open(component, _config);
   }
 
   findClosestModal(element: ElementRef<HTMLElement>): ModalRef | undefined {

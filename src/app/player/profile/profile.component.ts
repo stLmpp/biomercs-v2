@@ -11,6 +11,8 @@ import { StateComponent } from '../../shared/components/common/state-component';
 import { Animations } from '../../shared/animations/animations';
 import { AuthQuery } from '../../auth/auth.query';
 import { RegionService } from '../../region/region.service';
+import { RegionQuery } from '../../region/region.query';
+import { DynamicLoaderService } from '../../core/dynamic-loader.service';
 
 @Component({
   selector: 'bio-profile',
@@ -19,15 +21,17 @@ import { RegionService } from '../../region/region.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [Animations.collapse.collapse()],
 })
-export class ProfileComponent extends StateComponent<{ editMode: boolean }> implements OnInit {
+export class ProfileComponent extends StateComponent<{ editMode: boolean; loadingRegion: boolean }> implements OnInit {
   constructor(
     private playerQuery: PlayerQuery,
     private routerQuery: RouterQuery,
     private playerService: PlayerService,
     private authQuery: AuthQuery,
-    private regionService: RegionService
+    private regionService: RegionService,
+    private regionQuery: RegionQuery,
+    private dynamicLoaderService: DynamicLoaderService
   ) {
-    super({ editMode: false });
+    super({ editMode: false, loadingRegion: false });
   }
 
   private _update$ = new BehaviorSubject<PlayerUpdateDto>({});
@@ -39,6 +43,7 @@ export class ProfileComponent extends StateComponent<{ editMode: boolean }> impl
   editMode$ = this.selectState('editMode');
   player$ = this._idPlayer$.pipe(switchMap(idPlayer => this.playerQuery.selectEntity(idPlayer)));
   isSameAsLogged$ = this._idPlayer$.pipe(switchMap(idPlayer => this.authQuery.selectIsSameAsLogged(idPlayer)));
+  loadingRegion$ = this.selectState('loadingRegion');
 
   get idPlayer(): number {
     // idPlayer is required to access this component
@@ -61,11 +66,19 @@ export class ProfileComponent extends StateComponent<{ editMode: boolean }> impl
     this._update$.next({ ...this._update$.value, [key]: value });
   }
 
-  openModalSelectRegion(): void {
+  async openModalSelectRegion(): Promise<void> {
     const idRegionPlayer = this.player.region?.id ?? -1;
-    this.regionService.showSelectModal(idRegionPlayer, idRegion =>
+    this.updateState('loadingRegion', true);
+    await this.regionService.showSelectModal(idRegionPlayer, idRegion =>
       this.playerService.update(this.idPlayer, { idRegion })
     );
+    this.updateState('loadingRegion', false);
+  }
+
+  preloadRegions(): void {
+    if (!this.regionQuery.getLoading() && !this.regionQuery.getAll().length) {
+      this.dynamicLoaderService.preloadRequest(this.regionService.get());
+    }
   }
 
   ngOnInit(): void {

@@ -1,15 +1,15 @@
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
-import { AuthService } from '../auth.service';
+import { AuthService } from '../../auth.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { RouteDataEnum, RouteParamEnum } from '../../model/route-param.enum';
+import { RouteDataEnum, RouteParamEnum } from '../../../model/route-param.enum';
 import { RouterQuery } from '@stlmpp/router';
 import { ControlBuilder, Validators } from '@stlmpp/control';
 import { Observable } from 'rxjs';
 import { finalize, tap } from 'rxjs/operators';
-import { AuthRegisterResponse } from '../../model/auth';
-import { User } from '../../model/user';
-import { catchAndThrow } from '../../util/operators/catchError';
-import { StateComponent } from '../../shared/components/common/state-component';
+import { AuthRegisterResponse } from '../../../model/auth';
+import { User } from '../../../model/user';
+import { catchAndThrow } from '../../../util/operators/catchError';
+import { StateComponent } from '../../../shared/components/common/state-component';
 
 interface SteamRegisterForm {
   code: number | null;

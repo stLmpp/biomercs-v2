@@ -35,3 +35,5 @@ const windowProvider: FactoryProvider = {
 };
 
 export const WINDOW_PROVIDERS = [browserWindowProvider, windowProvider];
+
+export const NAVIGATOR = new InjectionToken<Navigator>('NAVIGATOR');

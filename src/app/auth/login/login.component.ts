@@ -9,7 +9,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { catchAndThrow } from '../../util/operators/catchError';
 import { SnackBarService } from '../../shared/components/snack-bar/snack-bar.service';
 import { ModalService } from '../../shared/components/modal/modal.service';
-import { LoginConfirmCodeModalComponent } from '../login-confirm-code-modal/login-confirm-code-modal.component';
+import type { LoginConfirmCodeModalComponent } from './login-confirm-code-modal/login-confirm-code-modal.component';
 import { HttpStatusCode } from '../../model/http-code.enum';
 import { HttpError } from '../../model/http-error';
 import { StateComponent } from '../../shared/components/common/state-component';
@@ -68,13 +68,19 @@ export class LoginComponent
           this.updateState('loading', false);
           this.form.enable();
         }),
-        catchAndThrow((error: HttpError<number>) => {
+        catchAndThrow(async (error: HttpError<number>) => {
           this.updateState('error', error.message);
           if (error.status === HttpStatusCode.PreconditionFailed) {
-            this.modalService.open<LoginConfirmCodeModalComponent, number>(LoginConfirmCodeModalComponent, {
-              data: error.extra,
-              disableClose: true,
-            });
+            await this.modalService.openLazy<LoginConfirmCodeModalComponent, number>(
+              () =>
+                import('./login-confirm-code-modal/login-confirm-code-modal.component').then(
+                  c => c.LoginConfirmCodeModalComponent
+                ),
+              {
+                data: error.extra,
+                disableClose: true,
+              }
+            );
           }
         })
       )

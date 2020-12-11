@@ -1,12 +1,12 @@
 import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 import { ControlBuilder, Validators } from '@stlmpp/control';
-import { ModalRef } from '../../shared/components/modal/modal-ref';
-import { MODAL_DATA } from '../../shared/components/modal/modal.config';
-import { AuthService } from '../auth.service';
+import { ModalRef } from '../../../shared/components/modal/modal-ref';
+import { MODAL_DATA } from '../../../shared/components/modal/modal.config';
+import { AuthService } from '../../auth.service';
 import { finalize, tap } from 'rxjs/operators';
 import { Router } from '@angular/router';
-import { catchAndThrow } from '../../util/operators/catchError';
-import { StateComponent } from '../../shared/components/common/state-component';
+import { catchAndThrow } from '../../../util/operators/catchError';
+import { StateComponent } from '../../../shared/components/common/state-component';
 
 interface LoginConfirmationForm {
   code: number | null;

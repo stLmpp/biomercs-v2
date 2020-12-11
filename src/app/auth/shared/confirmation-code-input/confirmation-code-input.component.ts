@@ -18,7 +18,7 @@ import { ControlArray, ControlBuilder, ControlValue, Validators } from '@stlmpp/
 import { FocusableOption, FocusKeyManager } from '@angular/cdk/a11y';
 import { Subject } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
-import { SimpleChangesCustom } from '../../util/util';
+import { SimpleChangesCustom } from '../../../util/util';
 
 @Directive({ selector: 'input[confirmationCodeInput]' })
 export class ConfirmationCodeInputDirective implements FocusableOption {

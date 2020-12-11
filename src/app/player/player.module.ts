@@ -8,19 +8,9 @@ import { StControlModule } from '@stlmpp/control';
 import { FormModule } from '../shared/components/form/form.module';
 import { ButtonModule } from '../shared/components/button/button.module';
 import { IconModule } from '../shared/components/icon/icon.module';
-import { RegionModule } from '../region/region.module';
 
 @NgModule({
   declarations: [ProfileComponent],
-  imports: [
-    CommonModule,
-    PlayerRoutingModule,
-    CardModule,
-    StControlModule,
-    FormModule,
-    ButtonModule,
-    IconModule,
-    RegionModule,
-  ],
+  imports: [CommonModule, PlayerRoutingModule, CardModule, StControlModule, FormModule, ButtonModule, IconModule],
 })
 export class PlayerModule {}

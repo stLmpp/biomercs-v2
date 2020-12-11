@@ -4,7 +4,6 @@ import { OperatorFunction } from 'rxjs';
 import { catchAndThrow } from '../../util/operators/catchError';
 import { SnackBarService } from '../../shared/components/snack-bar/snack-bar.service';
 import { ModalService } from '../../shared/components/modal/modal.service';
-import { ErrorComponent } from './error.component';
 import { take } from 'rxjs/operators';
 import { AuthQuery } from '../../auth/auth.query';
 
@@ -19,8 +18,10 @@ export class HandleErrorService {
   private _snackBar(message: string, button: string, data: HttpError, isAdmin: boolean): void {
     const snack = this.snackBarService.open(message, { action: button });
     if (isAdmin) {
-      snack.onAction$.pipe(take(1)).subscribe(() => {
-        this.modalService.open(ErrorComponent, { data });
+      snack.onAction$.pipe(take(1)).subscribe(async () => {
+        await this.modalService.openLazy(() => import('../error/error.component').then(c => c.ErrorComponent), {
+          data,
+        });
       });
     }
   }

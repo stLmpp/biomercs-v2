@@ -1,5 +1,5 @@
 import { APP_INITIALIZER, LOCALE_ID, ModuleWithProviders, NgModule, Provider } from '@angular/core';
-import { WINDOW_PROVIDERS } from './window.service';
+import { NAVIGATOR, WINDOW, WINDOW_PROVIDERS } from './window.service';
 import { ApiInterceptor } from './api.interceptor';
 import { LoadingInterceptor } from './loading/loading.interceptor';
 import { DateInterceptor } from './date.interceptor';
@@ -54,6 +54,7 @@ export class CoreModule {
           multi: true,
         },
         { provide: AbstractRegionService, useClass: RegionService },
+        { provide: NAVIGATOR, useFactory: (window: Window) => window.navigator ?? {}, deps: [WINDOW] },
       ],
     };
   }
