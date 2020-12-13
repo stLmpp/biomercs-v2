@@ -92,8 +92,8 @@ export class LoginComponent
 
   ngOnInit(): void {
     this.form.value$
-      .pipe(withLatestFrom(this.error$))
       .pipe(
+        withLatestFrom(this.error$),
         takeUntil(this.destroy$),
         filter(([_, error]) => !!error)
       )

@@ -17,6 +17,10 @@ export class AuthQuery extends Query<Auth> {
   isLogged$ = this.select('user').pipe(map(user => !!user?.id && !!user.token));
   user$ = this.select('user');
 
+  selectIsAdmin(): Observable<boolean> {
+    return this.user$.pipe(map(user => !!user?.admin));
+  }
+
   getToken(): string {
     return this.getUser()?.token ?? '';
   }
